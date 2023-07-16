@@ -10,4 +10,11 @@ I spent quite some time thinking about how one would implement the Grammar of Gr
 
 Any ideas or contributions are highly appreciated. Let us see where the journey leads to.
 
+## Data
+
+You need one important thing to test and demonstrate a chart engine and that is data. ggolpt2 does an ingenious and simple thing: It ships some datasets that are used throughout the documentation. 
+
+I started by creating a `GrammarGraph.Data` assembly that contains the [Diamonds](https://ggplot2.tidyverse.org/reference/diamonds.html#format) and the [MPG](https://ggplot2.tidyverse.org/reference/mpg.html#format) datasets.
+I'm trying to figure out the proper way to cite these data sources. I hope for now the links will do.
+
 
