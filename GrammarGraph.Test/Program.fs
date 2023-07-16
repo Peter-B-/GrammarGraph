@@ -3,8 +3,8 @@
 
 
 let diamonds = 
-    DataSets.diamonds
-    |> Seq.truncate 10
+    DataSets.diamonds 
+    |> List.truncate 10
 
 for d in diamonds do
-    printfn "%f" d
+    printfn "%s" (d.ToString())
