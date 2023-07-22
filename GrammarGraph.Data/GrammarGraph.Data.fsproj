@@ -8,7 +8,8 @@
   <ItemGroup>
     <EmbeddedResource Include="DataSets\diamonds.csv" />
     <EmbeddedResource Include="DataSets\mpg.csv" />
-    <Compile Include="Library.fs" />
+    <Compile Include="Csv.fs" />
+    <Compile Include="Diamonds.fs" />
   </ItemGroup>
 
   <ItemGroup>

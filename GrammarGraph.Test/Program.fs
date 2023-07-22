@@ -9,5 +9,6 @@ let diamonds =
 for d in diamonds do
     printfn "%s" (d.ToString())
     d.Carat |> ignore
+    d.Clarity |> ignore
 
 
