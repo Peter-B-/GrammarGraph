@@ -1,6 +1,5 @@
-﻿open GrammarGraph.Data
-
-
+﻿
+open GrammarGraph.Data
 
 let diamonds = 
     DataSets.diamonds 

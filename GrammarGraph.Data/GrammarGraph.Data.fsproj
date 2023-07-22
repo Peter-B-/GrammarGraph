@@ -10,6 +10,8 @@
     <EmbeddedResource Include="DataSets\mpg.csv" />
     <Compile Include="Csv.fs" />
     <Compile Include="Diamonds.fs" />
+    <Compile Include="FuelEconomy.fs" />
+    <Compile Include="Data.fs" />
   </ItemGroup>
 
   <ItemGroup>

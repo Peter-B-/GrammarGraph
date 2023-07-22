@@ -26,4 +26,9 @@ let loadDataSetLines (name: string) =
     readLines stream
     // skip header line
     |> Seq.skip 1
-        
+ 
+let load name parser =
+    loadDataSetLines name
+    |> Seq.map (fun line -> line.Split(',') |> Array.map (fun p -> p.Trim('"')))
+    |> Seq.map parser
+    |> Seq.toList
