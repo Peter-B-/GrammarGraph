@@ -2,10 +2,10 @@
 
 open GrammarGraph.Data
 
-let diamonds =
+let diamonds () =
     Csv.load "diamonds" Diamonds.parse
 
-let fuelEconomy =
+let fuelEconomy () =
     Csv.load "mpg" FuelEconomy.parse
     
     
