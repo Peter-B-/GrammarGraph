@@ -8,6 +8,8 @@ type internal Marker =
     interface
     end
 
+let skipHeader stream = stream |> Seq.skip 1
+
 let loadDataSetLines (name: string) =
     let readLines (stream: Stream) =
         seq {
@@ -23,12 +25,10 @@ let loadDataSetLines (name: string) =
     let stream =
         assembly.GetManifestResourceStream($"GrammarGraph.Data.DataSets.{name}.csv")
 
-    readLines stream
-    // skip header line
-    |> Seq.skip 1
- 
+    readLines stream |> skipHeader
+
+let splitAndTrim (line: string) =
+    line.Split(',') |> Array.map (fun p -> p.Trim('"'))
+
 let load name parser =
-    loadDataSetLines name
-    |> Seq.map (fun line -> line.Split(',') |> Array.map (fun p -> p.Trim('"')))
-    |> Seq.map parser
-    |> Seq.toList
+    loadDataSetLines name |> Seq.map splitAndTrim |> Seq.map parser |> Seq.toList

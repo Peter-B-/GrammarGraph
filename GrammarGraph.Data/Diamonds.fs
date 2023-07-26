@@ -1,4 +1,4 @@
-﻿module GrammarGraph.Data.Diamonds  
+﻿module GrammarGraph.Data.Diamonds
 
 [<Measure>]
 type mm
@@ -6,6 +6,10 @@ type mm
 /// US Dollar $
 [<Measure>]
 type USD
+
+/// metric carat. 1 metric carat (ct) = 0.2 g
+[<Measure>]
+type ct
 
 type Cut =
     | Fair
@@ -76,7 +80,7 @@ module Color =
 type Diamond =
     {
         /// Weight of the diamond
-        Carat: float
+        Carat: float<ct>
 
         /// Quality of the cut
         Cut: Cut
@@ -100,16 +104,17 @@ type Diamond =
         Width: float<mm>
         Depth: float<mm>
     }
-    
+
 
 let parse (parts: string array) =
     let mm x = x * 1.0<mm>
     let USD x = x * 1.0<USD>
+    let ct x = x * 1.0<ct>
 
     let parseFloat str =
         System.Double.Parse(str, System.Globalization.CultureInfo.InvariantCulture)
 
-    { Carat = parts.[0] |> parseFloat
+    { Carat = parts.[0] |> parseFloat |> ct
       Cut = parts.[1] |> Cut.parse
       Color = parts.[2] |> Color.parse
       Clarity = parts.[3] |> Clarity.parse
@@ -119,4 +124,3 @@ let parse (parts: string array) =
       Length = parts.[7] |> parseFloat |> mm
       Width = parts.[8] |> parseFloat |> mm
       Depth = parts.[9] |> parseFloat |> mm }
-
