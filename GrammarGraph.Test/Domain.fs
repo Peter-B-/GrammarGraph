@@ -1,6 +1,6 @@
 ﻿module GrammarGraph.Test.Domain
 
-type DataAccessExpression = { TODO: int }
+open System.Linq.Expressions
 
 type Aesthetic =
     | X
@@ -8,9 +8,7 @@ type Aesthetic =
     | Color
     | Size
 
-type AesDesc =
-    { Aes: Aesthetic
-      Expr: DataAccessExpression }
+type AesDesc = { Aes: Aesthetic; Expr: Expression }
 
 type Statistics = { TODO: int }
 type Geometry = { TODO: int }
@@ -48,6 +46,25 @@ type GrammarGraph<'a> =
     { Data: seq<'a>
       Desc: GraphicsDescription<'a> }
 
+module Aes =
+    let x a desc =
+        let aesthecits =
+            { AesDesc.Aes = Aesthetic.X
+              AesDesc.Expr = a }
+            :: desc.Desc.Aes
+
+        let d = { desc.Desc with Aes = aesthecits }
+        { desc with Desc = d }
+
+    let y a desc =
+        let aesthecits =
+            { AesDesc.Aes = Aesthetic.X
+              AesDesc.Expr = a }
+            :: desc.Desc.Aes
+
+        let d = { desc.Desc with Aes = aesthecits }
+        { desc with Desc = d }
+
 module Grammar =
     let defaultGraphicsDescription =
         { Aes = []
@@ -58,23 +75,6 @@ module Grammar =
           Facetting = SingleGraph
           Coordinates = Carthesian }
 
-    let grammarGraph data =
+    let graph data =
         { Data = data
           Desc = defaultGraphicsDescription }
-
-
-//  mpg %>%
-//    ggplot() +
-//    aes(x = cyl, y = hwy) +
-//    facet_wrap(. ~ trans) +
-//    scale_x_log10() +
-//    geom_point() +
-//    geom_jitter(aes(colour = class))
-//
-//  mpg %>%
-//    ggplot() +
-//    aes(x = cyl, y = hwy, alpha = fl) +
-//    facet_wrap(. ~ trans) +
-//    scale_x_log10() +
-//    geom_point(color = "red") +
-//    geom_jitter(aes(colour = class))
