@@ -8,7 +8,13 @@
     <ItemGroup>
         <Compile Include="Model.fs" />
         <Compile Include="Aes.fs" />
-        <Compile Include="Grammar.fs" />
+        <Compile Include="Geom.fs" />
+        <Compile Include="Plotly.fs" />
+        <Compile Include="Graph.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Plotly.NET" Version="4.2.0" />
     </ItemGroup>
 
 </Project>

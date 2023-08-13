@@ -3,17 +3,17 @@
 open GrammarGraph.Model
 
 let x a desc =
-    let aesthecits =
+    let aes =
         { AesDesc.Aes = Aesthetic.X
           AesDesc.Expr = a }
         :: desc.Desc.Aes
 
-    let d = { desc.Desc with Aes = aesthecits }
+    let d = { desc.Desc with Aes = aes }
     { desc with Desc = d }
 
 let y a desc =
     let aesthecits =
-        { AesDesc.Aes = Aesthetic.X
+        { AesDesc.Aes = Aesthetic.Y
           AesDesc.Expr = a }
         :: desc.Desc.Aes
 

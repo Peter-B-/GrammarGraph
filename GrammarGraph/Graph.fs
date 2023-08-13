@@ -1,4 +1,4 @@
-﻿module GrammarGraph.Grammar
+﻿module GrammarGraph.Graph
 
 open GrammarGraph.Model
 
@@ -11,6 +11,8 @@ let defaultGraphicsDescription =
       Facetting = SingleGraph
       Coordinates = Carthesian }
 
-let graph data =
+let create data =
     { Data = data
       Desc = defaultGraphicsDescription }
+    
+let plot graph = Plotly.plot graph

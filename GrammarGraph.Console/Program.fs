@@ -10,4 +10,8 @@ for d in diamonds |> List.truncate 10 do
 
 let graph =
     diamonds
-    |> Grammar.graph
+    |> Graph.create
+    |> Aes.x (fun x -> x.Price)
+    |> Aes.y (fun x -> x.Carat)
+    |> Geom.point
+    |> Graph.plot

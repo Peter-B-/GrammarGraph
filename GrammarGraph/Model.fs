@@ -1,6 +1,8 @@
 ﻿module GrammarGraph.Model
 
-type PropAccess = obj -> obj
+open System
+
+type PropAccess<'a> = 'a -> IConvertible
 
 type Aesthetic =
     | X
@@ -8,17 +10,17 @@ type Aesthetic =
     | Color
     | Size
 
-type AesDesc = { Aes: Aesthetic; Expr: PropAccess} //TODO: Use System.Linq.Expression or F# code quotations?
+type AesDesc<'a> = { Aes: Aesthetic; Expr: PropAccess<'a>} //TODO: Use System.Linq.Expression or F# code quotations?
 // https://learn.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression?view=net-7.0
 // https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/code-quotations
 
 type Statistics = { TODO: int }
-type Geometry = { TODO: int }
+type Geometry = | Point
 type Position = { TODO: int }
 
-type Layer =
+type Layer<'a> =
     { Stats: Statistics list
-      Aes: AesDesc list
+      Aes: AesDesc<'a> list
       Geom: Geometry
       Position: Position }
 
@@ -35,9 +37,9 @@ type Scales = { xScale: Scale; yScale: Scale }
 type Facetting = | SingleGraph
 type Coordinates = | Carthesian
 
-type GraphicsDescription =
-    { Aes: AesDesc list
-      Layers: Layer list
+type GraphicsDescription<'a> =
+    { Aes: AesDesc<'a> list
+      Layers: Layer<'a> list
       Guides: Guide list
       Annotations: Annotation list
       Scales: Scales
@@ -46,23 +48,10 @@ type GraphicsDescription =
 
 type GrammarGraph<'a> =
     { Data: seq<'a>
-      Desc: GraphicsDescription }
+      Desc: GraphicsDescription<'a> }
 
-module Aes =
-    let x a desc =
-        let aesthecits =
-            { AesDesc.Aes = Aesthetic.X
-              AesDesc.Expr = a }
-            :: desc.Desc.Aes
-
-        let d = { desc.Desc with Aes = aesthecits }
-        { desc with Desc = d }
-
-    let y a desc =
-        let aesthecits =
-            { AesDesc.Aes = Aesthetic.X
-              AesDesc.Expr = a }
-            :: desc.Desc.Aes
-
-        let d = { desc.Desc with Aes = aesthecits }
-        { desc with Desc = d }
+type GrammarGraphException(message : string) =
+    inherit Exception(message)
+    
+let raiseGrammarGraphException message = GrammarGraphException message |> raise
+    
