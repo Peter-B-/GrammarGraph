@@ -111,7 +111,7 @@ let parse (parts: string array) =
     let USD x = x * 1.0<USD>
     let ct x = x * 1.0<ct>
 
-    let parseFloat str =
+    let parseFloat (str : string) =
         System.Double.Parse(str, System.Globalization.CultureInfo.InvariantCulture)
 
     { Carat = parts.[0] |> parseFloat |> ct

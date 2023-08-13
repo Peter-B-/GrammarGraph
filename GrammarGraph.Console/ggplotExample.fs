@@ -1,6 +1,5 @@
 ﻿module GrammarGraph.Test.Example
 
-open GrammarGraph.Test.Domain
 //  mpg %>%
 //    ggplot() +
 //    aes(x = cyl, y = hwy) +
@@ -16,10 +15,9 @@ open GrammarGraph.Test.Domain
 //    scale_x_log10() +
 //    geom_point(color = "red") +
 //    geom_jitter(aes(colour = class))
- let x = [] |> List.filter (fun)
 
-let graph =
-    GrammarGraph.Data.DataSets.diamonds ()
-    |> Grammar.graph
-    |> Aes.x (fun x -> x.Length)
-    |> Aes.y (fun x -> x.Width)
+// let graph =
+//     GrammarGraph.Data.DataSets.diamonds ()
+//     |> Grammar.graph
+//     |> Aes.x (fun x -> x.Length)
+//     |> Aes.y (fun x -> x.Width)

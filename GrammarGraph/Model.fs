@@ -1,6 +1,6 @@
-﻿module GrammarGraph.Test.Domain
+﻿module GrammarGraph.Model
 
-open System.Linq.Expressions
+type PropAccess = obj -> obj
 
 type Aesthetic =
     | X
@@ -8,7 +8,9 @@ type Aesthetic =
     | Color
     | Size
 
-type AesDesc = { Aes: Aesthetic; Expr: Expression }
+type AesDesc = { Aes: Aesthetic; Expr: PropAccess} //TODO: Use System.Linq.Expression or F# code quotations?
+// https://learn.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression?view=net-7.0
+// https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/code-quotations
 
 type Statistics = { TODO: int }
 type Geometry = { TODO: int }
@@ -33,7 +35,7 @@ type Scales = { xScale: Scale; yScale: Scale }
 type Facetting = | SingleGraph
 type Coordinates = | Carthesian
 
-type GraphicsDescription<'a> =
+type GraphicsDescription =
     { Aes: AesDesc list
       Layers: Layer list
       Guides: Guide list
@@ -44,7 +46,7 @@ type GraphicsDescription<'a> =
 
 type GrammarGraph<'a> =
     { Data: seq<'a>
-      Desc: GraphicsDescription<'a> }
+      Desc: GraphicsDescription }
 
 module Aes =
     let x a desc =
@@ -64,17 +66,3 @@ module Aes =
 
         let d = { desc.Desc with Aes = aesthecits }
         { desc with Desc = d }
-
-module Grammar =
-    let defaultGraphicsDescription =
-        { Aes = []
-          Layers = []
-          Guides = []
-          Annotations = []
-          Scales = { xScale = Linear; yScale = Linear }
-          Facetting = SingleGraph
-          Coordinates = Carthesian }
-
-    let graph data =
-        { Data = data
-          Desc = defaultGraphicsDescription }

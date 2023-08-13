@@ -42,10 +42,10 @@ let parse (parts: string array) =
     let l x = x * 1.0<l>
     let mpg x = x * 1.0<mile / gallon>
 
-    let parseFloat str =
+    let parseFloat (str:string) =
         System.Double.Parse(str, System.Globalization.CultureInfo.InvariantCulture)
 
-    let parseInt str =
+    let parseInt (str:string) =
         System.Int32.Parse(str, System.Globalization.CultureInfo.InvariantCulture)
 
     let parseConsumption (cty, hwy) =

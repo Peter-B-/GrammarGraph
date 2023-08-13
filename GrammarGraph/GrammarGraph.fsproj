@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Model.fs" />
+        <Compile Include="Aes.fs" />
+        <Compile Include="Grammar.fs" />
+    </ItemGroup>
+
+</Project>
