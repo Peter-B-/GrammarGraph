@@ -1,5 +1,8 @@
-﻿open GrammarGraph
+﻿open System
+open System.Linq.Expressions
+open GrammarGraph
 open GrammarGraph.Data
+open GrammarGraph.Data.Diamonds
 
 let diamonds = DataSets.diamonds ()
 
@@ -11,7 +14,7 @@ for d in diamonds |> List.truncate 10 do
 let graph =
     diamonds
     |> Graph.create
-    |> Aes.x (fun x -> x.Price)
-    |> Aes.y (fun x -> x.Carat)
+    |> Aes.x <@ fun x -> x.Price @>
+    |> Aes.y <@ fun x -> x.Carat @>
     |> Geom.point
     |> Graph.plot

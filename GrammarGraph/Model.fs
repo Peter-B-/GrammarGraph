@@ -1,6 +1,7 @@
 ﻿module GrammarGraph.Model
 
 open System
+open Microsoft.FSharp.Quotations
 
 type PropAccess<'a> = 'a -> IConvertible
 
@@ -10,7 +11,7 @@ type Aesthetic =
     | Color
     | Size
 
-type AesDesc<'a> = { Aes: Aesthetic; Expr: PropAccess<'a>} //TODO: Use System.Linq.Expression or F# code quotations?
+type AesDesc<'a> = { Aes: Aesthetic; Expr: Expr<('a -> IConvertible)> } //TODO: Use System.Linq.Expression or F# code quotations?
 // https://learn.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression?view=net-7.0
 // https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/code-quotations
 

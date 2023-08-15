@@ -2,20 +2,15 @@
 
 open GrammarGraph.Model
 
-let x a desc =
+let add aes access desc =
     let aes =
-        { AesDesc.Aes = Aesthetic.X
-          AesDesc.Expr = a }
+        { AesDesc.Aes = aes
+          AesDesc.Expr = access }
         :: desc.Desc.Aes
 
     let d = { desc.Desc with Aes = aes }
     { desc with Desc = d }
+    
+let x access desc = add X access desc
 
-let y a desc =
-    let aesthecits =
-        { AesDesc.Aes = Aesthetic.Y
-          AesDesc.Expr = a }
-        :: desc.Desc.Aes
-
-    let d = { desc.Desc with Aes = aesthecits }
-    { desc with Desc = d }
+let y access desc = add Y access desc
