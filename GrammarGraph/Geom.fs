@@ -2,11 +2,15 @@
 
 open GrammarGraph.Model
 
-let point graph =
-    let newPointLayer =
+let add geom graph =
+    let newLayer =
         { Stats = []
           Aes = []
-          Geom = Point
+          Geom = geom
           Position = { TODO = -1 } }
 
-    { graph with Desc = { graph.Desc with Layers = newPointLayer :: graph.Desc.Layers } }
+    { graph with Desc = { graph.Desc with Layers = newLayer :: graph.Desc.Layers } }
+    
+let point graph = add Point graph
+let line graph = add Line graph
+

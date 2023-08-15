@@ -16,7 +16,9 @@ type AesDesc<'a> = { Aes: Aesthetic; Expr: Expr<('a -> IConvertible)> } //TODO: 
 // https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/code-quotations
 
 type Statistics = { TODO: int }
-type Geometry = | Point
+type Geometry =
+    | Point
+    | Line
 type Position = { TODO: int }
 
 type Layer<'a> =

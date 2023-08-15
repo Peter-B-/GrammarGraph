@@ -43,10 +43,24 @@ let addPointLayer graph (layer: Layer<_>) =
     Chart.Point(xValues, yValues)
     |> Chart.withXAxisStyle (TitleText = xName)
     |> Chart.withYAxisStyle (TitleText = yName)
+    
+let addLineLayer graph (layer: Layer<_>) =
+    let layerAes = layer.Aes @ graph.Desc.Aes
+    
+    let xAes = getAes X layerAes
+    let xValues, xName = extractAes xAes graph 
+
+    let yAes = getAes Y layerAes
+    let yValues, yName = extractAes yAes graph
+
+    Chart.Line(xValues, yValues)
+    |> Chart.withXAxisStyle (TitleText = xName)
+    |> Chart.withYAxisStyle (TitleText = yName)
 
 let layerToPlot graph (layer: Layer<_>) =
     match layer.Geom with
     | Point -> addPointLayer graph layer
+    | Line -> addLineLayer graph layer
 
 let plot (graph: GrammarGraph<'a>) =
     graph.Desc.Layers
