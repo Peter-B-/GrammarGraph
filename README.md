@@ -17,4 +17,6 @@ You need one important thing to test and demonstrate a chart engine and that is 
 I started by creating a `GrammarGraph.Data` assembly that contains the [Diamonds](https://ggplot2.tidyverse.org/reference/diamonds.html#format) and the [MPG](https://ggplot2.tidyverse.org/reference/mpg.html#format) datasets.
 I'm trying to figure out the proper way to cite these data sources. I hope for now the links will do.
 
+## Try out
 
+This repository contains two tryout-files, one for [LINQPad](https://www.linqpad.net) and one for [Polyglot Notebooks](https://code.visualstudio.com/docs/languages/polyglot). Both reference the local build of the repository and cana be used to try the library.
