@@ -6,10 +6,12 @@
 open GrammarGraph
 open GrammarGraph.Data
 
+
 DataSets.diamonds ()
+//|> Dump
 |> Graph.create
-|> Aes.x (fun x -> x.Price)
-|> Aes.y (fun x -> x.Carat)
+|> Aes.x <@ fun x -> x.Depth @>
+|> Aes.y <@ fun x -> x.DepthRatio @>
 |> Geom.point
 |> Graph.plot
 |> Dump
