@@ -2,6 +2,7 @@
 
 open System
 open FSharp.Linq.RuntimeHelpers
+open Microsoft.FSharp.Quotations
 open Microsoft.FSharp.Quotations.ExprShape
 open Microsoft.FSharp.Quotations.Patterns
 
@@ -16,7 +17,9 @@ let rec getPropertyName expression =
     | ShapeLambda (_, expr) -> getPropertyName expr
     | ShapeCombination(_, exprList) -> getPropertyName exprList.Head //TODO: can the list be longer?
 
-let eval quotation = LeafExpressionConverter.EvaluateQuotation quotation
+let eval quotation =
+    let func = match quotation with Patterns.WithValue(v, _, _) -> v 
+    func
 
 let getAes desiredAes (aes: AesDesc<_> list) =
     aes
@@ -26,9 +29,9 @@ let getAes desiredAes (aes: AesDesc<_> list) =
         | None -> raiseGrammarGraphException $"Aes {desiredAes} is not specified"
         
 let extractAes aes graph =
+    let name = getPropertyName aes.Expr
     let access = aes.Expr |> eval :?> 'a -> IConvertible
     let values = graph.Data |> Seq.map access |> Seq.toArray
-    let name = getPropertyName aes.Expr
     (values, name)
 
 let addPointLayer graph (layer: Layer<_>) =

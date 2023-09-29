@@ -10,8 +10,8 @@ open GrammarGraph.Data
 DataSets.diamonds ()
 //|> Dump
 |> Graph.create
-|> Aes.x <@ fun x -> x.Depth @>
-|> Aes.y <@ fun x -> x.DepthRatio @>
+|> Aes.Aes.x( fun x -> x.Depth )
+|> Aes.Aes.y( fun x -> x.DepthRatio )
 |> Geom.point
 |> Graph.plot
 |> Dump

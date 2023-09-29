@@ -14,7 +14,19 @@ for d in diamonds |> List.truncate 10 do
 let graph =
     diamonds
     |> Graph.create
-    |> Aes.x <@ fun x -> x.Price @>
-    |> Aes.y <@ fun x -> x.Carat @>
+    |> Aes.x (fun x -> x.Table)
+    |> Aes.y (fun x -> x.Carat)
     |> Geom.point
     |> Graph.plot
+
+
+let fuel = DataSets.fuelEconomy ()
+
+let graph2 =
+    fuel
+    |> Graph.create
+    |> Aes.x (fun x -> x.Cylinders)
+    |> Aes.y (fun x -> x.Year)
+    |> Geom.point
+    |> Graph.plot
+

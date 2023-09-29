@@ -1,16 +1,19 @@
-﻿module GrammarGraph.Aes
+﻿namespace GrammarGraph
 
 open GrammarGraph.Model
 
-let add aes access desc =
-    let aes =
-        { AesDesc.Aes = aes
-          AesDesc.Expr = access }
-        :: desc.Desc.Aes
+module Aes =
+    let add aes access desc =
+        let aes =
+            { AesDesc.Aes = aes
+              AesDesc.Expr = access }
+            :: desc.Desc.Aes
 
-    let d = { desc.Desc with Aes = aes }
-    { desc with Desc = d }
-    
-let x access desc = add X access desc
+        let d = { desc.Desc with Aes = aes }
+        { desc with Desc = d }
 
-let y access desc = add Y access desc
+type Aes =
+
+    static member x([<ReflectedDefinition(true)>] access) = Aes.add X access
+
+    static member y([<ReflectedDefinition(true)>] access) = Aes.add Y access
