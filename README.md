@@ -19,7 +19,7 @@ I'm trying to figure out the proper way to cite these data sources. I hope for n
 
 ## Design considerations
 
-This section conatins a collection of the design goals for this library. I think [ggplot2](https://ggplot2.tidyverse.org/reference/index.html) has a good syntax and a large user base familiar with it, so I would like to stick to that, where possible. I will also try to use the same vocabulary for the various concepts.
+This section contains a collection of the design goals for this library. I think [ggplot2](https://ggplot2.tidyverse.org/reference/index.html) has a good syntax and a large user base familiar with it, so I would like to stick to that, where possible. I will also try to use the same vocabulary for the various concepts.
 
 Qutations in this section directly come from the [ggplot2 documentation](https://ggplot2.tidyverse.org/reference/index.html).
 
@@ -105,6 +105,27 @@ ggplot(mtcars) +
 
 ```
 
+### Faceting
+
+### Factors
+
+R has a datatype [Factor](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/factor), which you can think of as a dynamic enum.
+
+A factor has a list of possible values, named levels, and each instance of a factor has one of those. I think factors are an important datatype when
+working with charts. They have some properties you cannot easily achieve with enums or strings.
+
+Factors
+- can be created at runtime from the data source, which enums can not.
+- have an order of levels, which strings have not. 
+- convey that variables should be interpreted as categorical. (`x = Cylinders` vs. `x = factor(Cylinders)`)
+- have a list of all possible values attached to every instance. So even subsets of a dataset contain the information on the complete list of levels. 
+
+I think that at some point such a data structure would be a valuable addition for a charting framework. I'm not aware of an implementation of this concept in .Net.
+
+### Color scales
+
+The charting library should come with a preset of color scales for both continuous and categorial scale. It should be easy for the user to use custom scales.
+
 ## Try out
 
-This repository contains two tryout-files, one for [LINQPad](https://www.linqpad.net) and one for [Polyglot Notebooks](https://code.visualstudio.com/docs/languages/polyglot). Both reference the local build of the repository and cana be used to try the library.
+This repository contains two tryout-files, one for [LINQPad](https://www.linqpad.net) and one for [Polyglot Notebooks](https://code.visualstudio.com/docs/languages/polyglot). Both reference the local build of the repository and can be used to try the library.
