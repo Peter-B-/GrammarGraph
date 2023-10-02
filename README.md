@@ -105,6 +105,37 @@ ggplot(mtcars) +
 
 ```
 
+### Statistics
+
+Statistics can be applied to variables before plotting. This allows to directly create bar charts or histograms from data without explicitly calculating statistics.
+
+```r
+ggplot(diamonds) +
+  aes(x = price) +
+  geom_histogram()
+```
+
+In this simple case one could argue, that the accumulation of values into bins should happen before the vizualisation stage. However this combination proves very powerfull, when combined with faceting or grouping into colors:
+
+```r
+ggplot(diamonds) +
+  aes(x = price, fill = clarity) +
+  facet_wrap(.~ cut) +
+  geom_histogram(binwidth = 1000)
+```
+
+Many geoms have predefined statistics, that can be overwritten.
+
+It is also possible to use other return values from the stat function directly in plotting. This is an advanced topic, but enables some very powerfull applications like:
+
+```r
+# To make it easier to compare distributions with very different counts,
+# put density on the y axis instead of the default count
+ggplot(diamonds) +
+  aes(price, after_stat(density), colour = cut) +
+  geom_freqpoly(binwidth = 500, linewidth = 1.5)
+```
+
 ### Faceting
 
 ### Factors
@@ -125,6 +156,34 @@ I think that at some point such a data structure would be a valuable addition fo
 ### Color scales
 
 The charting library should come with a preset of color scales for both continuous and categorial scale. It should be easy for the user to use custom scales.
+
+## Data representation
+
+ggplot creates a representation of the grafic in an `gg, ggplot` [S3 object](http://adv-r.had.co.nz/S3.html). But, R being R, this is not really obvious to the untrained observer looking at the source code.
+
+However, one can create plots, store them in variables and use [RStudio's](https://posit.co/download/rstudio-desktop/) variable viewer to analyze the resulting structure:
+
+```r
+plot <- 
+  ggplot(mtcars) + 
+    aes(x = wt, y = mpg, size = wt) +
+    geom_point(color = "red", size = 2)
+```
+This leads to plot being
+
+![Data structure in RStudio](Docs/RStudio%20plot%20variable.png)
+
+The class contains
+ - data
+ - layers
+ - scales
+ - mapping
+ - theme
+ - coordinates
+ - faced
+ - plot_env
+ - labels
+
 
 ## Try out
 
