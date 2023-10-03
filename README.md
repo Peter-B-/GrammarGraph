@@ -23,6 +23,23 @@ This section contains a collection of the design goals for this library. I think
 
 Qutations in this section directly come from the [ggplot2 documentation](https://ggplot2.tidyverse.org/reference/index.html).
 
+### Implementation language
+
+I want to implement the library in eighter F# or C#
+
+#### F#
+- great support for generating a DSL
+- great API in [Plotly.NET](https://plotly.net)
+- great data science community
+
+#### C#
+- larger user base
+
+
+### Charting backend
+
+GrammarGraph is supposed to provide a high level API for describing charts or graphics. But it does not make sense to implement all the details of a plotting framework from scretch. It makes sense to render the charts using an established plotting library like [Plotly.NET](https://plotly.net) or [OxyPlot](https://github.com/oxyplot/oxyplot).
+
 ### Elements of a chart
 In ggplot a chart of graph is composed from a list of (mostly optional) elements. 
 
@@ -153,9 +170,17 @@ Factors
 
 I think that at some point such a data structure would be a valuable addition for a charting framework. I'm not aware of an implementation of this concept in .Net.
 
-### Color scales
+### Color palette
 
-The charting library should come with a preset of color scales for both continuous and categorial scale. It should be easy for the user to use custom scales.
+The charting library should come with a preset of color palettes for both continuous and categorial data. It should be easy for the user to use custom palette.
+
+Colors are applied as a scale (similar to use `log10` on x-axis).
+
+```r
+ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+  geom_tile() +
+  scale_fill_continuous(type = "gradient")
+```
 
 ## Data representation
 
