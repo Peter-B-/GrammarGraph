@@ -11,8 +11,8 @@ public static class UsageSample
                     .CreateChart()
                     .WithAesthetics(AestheticsId.X, d => d.TimeStamp)
                     .WithAesthetics(AestheticsId.Y, d => d.Count)
-                    .WithGeom(Geom.Point())
-                    .WithGeom(Geom.Line(
+                    .WithGeom(b => b.Point())
+                    .WithGeom(b => b.Line(
                                   g => g.WithAesthetics(AestheticsId.Color, d => d.Server)
                               ))
             ;

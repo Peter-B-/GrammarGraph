@@ -5,7 +5,7 @@ namespace GrammarGraph.CSharp;
 
 public record Chart<T>(
     IEnumerable<T> Data,
-    ImmutableList<Layer> Layers,
+    ImmutableList<Geometry<T>> Geometries,
     ImmutableList<Scale> Scales,
     ImmutableDictionary<AestheticsId, Mapping<T>> Mappings,
     ImmutableList<Coordinate> Coordinates,
@@ -48,12 +48,14 @@ public record Mapping<T>(Expression<Func<T, IConvertible>> Expression);
 
 public record Scale;
 
-public record Layer;
+public record Geometry<T>(
+    ImmutableDictionary<AestheticsId, Mapping<T>> Mappings
+);
 
 public static class Chart
 {
     public static Chart<T> CreateChart<T>(this IEnumerable<T> data) =>
-        new(data, ImmutableList<Layer>.Empty,
+        new(data, ImmutableList<Geometry<T>>.Empty,
             ImmutableList<Scale>.Empty,
             ImmutableDictionary<AestheticsId, Mapping<T>>.Empty,
             ImmutableList<Coordinate>.Empty,
@@ -66,5 +68,43 @@ public static class Chart
         => chart with
         {
             Mappings = chart.Mappings.SetItem(id, new Mapping<T>(mapping))
+        };
+
+    public static Chart<T> WithGeom<T>(this Chart<T> chart, Func<GeometryBuilder<T>, Geometry<T>> geomFactory)
+    {
+        var geometry = geomFactory(GeometryBuilder.Create<T>());
+
+        return chart with
+        {
+            Geometries = chart.Geometries.Add(geometry)
+        };
+    }
+}
+
+public record GeometryBuilder<T>;
+
+public static class GeometryBuilder
+{
+    public static GeometryBuilder<T> Create<T>() => new();
+
+    public static Geometry<T> Line<T>(this GeometryBuilder<T> builder, Action<Geometry<T>>? config = null) => Create(config);
+    public static Geometry<T> Point<T>(this GeometryBuilder<T> builder, Action<Geometry<T>>? config = null) => Create(config);
+
+    private static Geometry<T> Create<T>(Action<Geometry<T>>? config)
+    {
+        var geometry = new Geometry<T>(ImmutableDictionary<AestheticsId, Mapping<T>>.Empty);
+        config?.Invoke(geometry);
+        return geometry;
+    }
+}
+
+public record GeometryConfig<T>;
+
+public static class GeometryConfig
+{
+    public static Geometry<T> WithAesthetics<T>(this Geometry<T> geometry, AestheticsId id, Expression<Func<T, IConvertible>> mapping)
+        => geometry with
+        {
+            Mappings = geometry.Mappings.SetItem(id, new Mapping<T>(mapping))
         };
 }
