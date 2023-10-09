@@ -9,7 +9,7 @@ public record Chart<T>(
     ImmutableList<Scale> Scales,
     ImmutableDictionary<AestheticsId, Mapping<T>> Mappings,
     ImmutableList<Coordinate> Coordinates,
-    Facet? Facet,
+    Facet<T>? Facet,
     ImmutableList<Label> Labels,
     Theme Theme);
 
@@ -18,6 +18,7 @@ public record AestheticsId(string Id)
     public static AestheticsId Color => new(Known.Color);
     public static AestheticsId Fill => new(Known.Fill);
     public static AestheticsId Size => new(Known.Size);
+    public static AestheticsId Shape => new(Known.Shape);
     public static AestheticsId X => new(Known.X);
     public static AestheticsId Y => new(Known.Y);
 
@@ -28,6 +29,7 @@ public record AestheticsId(string Id)
         public static string Color => "color";
         public static string Fill => "fill";
         public static string Size => "size";
+        public static string Shape => "shape";
         public static string X => "x";
         public static string Y => "y";
     }
@@ -40,7 +42,10 @@ public class Theme
 
 public record Label;
 
-public record Facet;
+public abstract record Facet<T>;
+
+public record GridFaced<T>(Expression<Func<T, IConvertible>> RowMap, Expression<Func<T, IConvertible>> ColMap):Facet<T>;
+public record WrapFaced<T>(Expression<Func<T, IConvertible>> Map):Facet<T>;
 
 public record Coordinate;
 
@@ -64,7 +69,7 @@ public static class Chart
             Theme.Default
         );
 
-    public static Chart<T> WithAesthetics<T>(this Chart<T> chart, AestheticsId id, Expression<Func<T, IConvertible>> mapping)
+    public static Chart<T> SetAesthetics<T>(this Chart<T> chart, AestheticsId id, Expression<Func<T, IConvertible>> mapping)
         => chart with
         {
             Mappings = chart.Mappings.SetItem(id, new Mapping<T>(mapping))
@@ -79,6 +84,18 @@ public static class Chart
             Geometries = chart.Geometries.Add(geometry)
         };
     }
+
+    public static Chart<T> InFacets<T>(this Chart<T> chart, Expression<Func<T, IConvertible>> rowMap, Expression<Func<T, IConvertible>> colMap) =>
+        chart with
+        {
+            Facet = new GridFaced<T>(rowMap, colMap)
+        };
+
+    public static Chart<T> InFacets<T>(this Chart<T> chart, Expression<Func<T, IConvertible>> map) =>
+        chart with
+        {
+            Facet = new WrapFaced<T>(map)
+        };
 }
 
 public record GeometryBuilder<T>;
