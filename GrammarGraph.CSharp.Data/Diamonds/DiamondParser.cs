@@ -1,11 +1,10 @@
-using GrammarGraph.CSharp.Data.Diamonds;
 using System.Globalization;
 
-namespace GrammarGraph.CSharp.Data;
+namespace GrammarGraph.CSharp.Data.Diamonds;
 
 internal static class DiamondParser
 {
-    private static readonly CultureInfo c = CultureInfo.InvariantCulture;
+    private static readonly CultureInfo C = CultureInfo.InvariantCulture;
 
     private static Clarity ParseClarity(string v) => v.Trim('"') switch
     {
@@ -17,7 +16,7 @@ internal static class DiamondParser
         "VVS2" => Clarity.VVS2,
         "VVS1" => Clarity.VVS1,
         "IF" => Clarity.IF,
-        _ => throw new ArgumentException($"\"{v}\" is an unknown Clarity"),
+        _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Clarity"),
     };
 
     private static Color ParseColor(string v) => v.Trim('"') switch
@@ -29,7 +28,7 @@ internal static class DiamondParser
         "F" => Color.F,
         "E" => Color.E,
         "D" => Color.D,
-        _ => throw new ArgumentException($"\"{v}\" is an unknown Color"),
+        _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Color"),
     };
 
     private static Cut ParseCut(string v) => v.Trim('"') switch
@@ -39,20 +38,20 @@ internal static class DiamondParser
         "Very Good" => Cut.VeryGood,
         "Premium" => Cut.Premium,
         "Ideal" => Cut.Ideal,
-        _ => throw new ArgumentException($"\"{v}\" is an unknown Cut"),
+        _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Cut"),
     };
 
     public static Diamond ParseDiamond(string[] parts) =>
         new Diamond(
-            double.Parse(parts[0], c),
+            double.Parse(parts[0], C),
             ParseCut(parts[1]),
             ParseColor(parts[2]),
             ParseClarity(parts[3]),
-            double.Parse(parts[4], c),
-            double.Parse(parts[5], c),
-            double.Parse(parts[6], c),
-            double.Parse(parts[7], c),
-            double.Parse(parts[8], c),
-            double.Parse(parts[9], c)
+            double.Parse(parts[4], C),
+            double.Parse(parts[5], C),
+            double.Parse(parts[6], C),
+            double.Parse(parts[7], C),
+            double.Parse(parts[8], C),
+            double.Parse(parts[9], C)
             );
 }
