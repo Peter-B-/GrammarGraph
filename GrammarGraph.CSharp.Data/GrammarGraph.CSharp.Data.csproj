@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Plotly.NET" Version="4.2.0" />
+    <Folder Include="DataSets\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GrammarGraph.CSharp.Data\GrammarGraph.CSharp.Data.csproj" />
+    <EmbeddedResource Include="..\GrammarGraph.Data\DataSets\diamonds.csv" Link="DataSets\diamonds.csv" />
+    <EmbeddedResource Include="..\GrammarGraph.Data\DataSets\mpg.csv" Link="DataSets\mpg.csv" />
   </ItemGroup>
+
 </Project>

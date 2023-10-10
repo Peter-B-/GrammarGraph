@@ -1,30 +1,23 @@
-﻿namespace GrammarGraph.CSharp;
+using GrammarGraph.CSharp.Data;
+
+namespace GrammarGraph.CSharp;
 
 public static class UsageSample
 {
     public static void Run()
     {
-        var data = new List<Item>();
+        var data = DataSets.GetDiamonds();
 
         var chart =
                 data
                     .CreateChart()
-                    .SetAesthetics(AestheticsId.X, d => d.TimeStamp)
-                    .SetAesthetics(AestheticsId.Y, d => d.Count)
+                    .SetAesthetics(AestheticsId.X, d => d.Carat)
+                    .SetAesthetics(AestheticsId.Y, d => d.Price)
                     .WithGeom(b => b.Point())
                     .WithGeom(b => b.Line(
-                                  g => g.WithAesthetics(AestheticsId.Color, d => d.Server)
+                                  g => g.WithAesthetics(AestheticsId.Color, d => d.Color)
                               ))
-                    .InFacets(d => d.User)
+                    .InFacets(d => d.Cut)
             ;
     }
 }
-
-public record Item(
-    DateTime TimeStamp,
-    int Count,
-    string Server,
-    string User,
-    TimeSpan RunTime,
-    TimeSpan QueryTime
-);

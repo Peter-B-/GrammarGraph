@@ -9,7 +9,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GrammarGraph.Console", "Gra
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GrammarGraph", "GrammarGraph\GrammarGraph.fsproj", "{7DCD0D77-3C0C-45B7-AE28-404529ADDF30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrammarGraph.CSharp", "GrammarGraph.CSharp\GrammarGraph.CSharp.csproj", "{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrammarGraph.CSharp", "GrammarGraph.CSharp\GrammarGraph.CSharp.csproj", "{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrammarGraph.CSharp.Data", "GrammarGraph.CSharp.Data\GrammarGraph.CSharp.Data.csproj", "{D9856D15-CD39-468E-BADB-538C1F0A0439}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9856D15-CD39-468E-BADB-538C1F0A0439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9856D15-CD39-468E-BADB-538C1F0A0439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9856D15-CD39-468E-BADB-538C1F0A0439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9856D15-CD39-468E-BADB-538C1F0A0439}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
