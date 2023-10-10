@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Linq.Expressions;
 
 namespace GrammarGraph.CSharp;
 
-public record Chart<T>(
+public record GgChart<T>(
     IEnumerable<T> Data,
     ImmutableList<Geometry<T>> Geometries,
     ImmutableList<Scale> Scales,
@@ -11,7 +11,10 @@ public record Chart<T>(
     ImmutableList<Coordinate> Coordinates,
     Facet<T>? Facet,
     ImmutableList<Label> Labels,
-    Theme Theme);
+    Theme Theme)
+{
+    private object ToDump() => this.Plot();
+}
 
 public record AestheticsId(string Id)
 {
@@ -57,9 +60,9 @@ public record Geometry<T>(
     ImmutableDictionary<AestheticsId, Mapping<T>> Mappings
 );
 
-public static class Chart
+public static class GgChart
 {
-    public static Chart<T> CreateChart<T>(this IEnumerable<T> data) =>
+    public static GgChart<T> CreateChart<T>(this IEnumerable<T> data) =>
         new(data, ImmutableList<Geometry<T>>.Empty,
             ImmutableList<Scale>.Empty,
             ImmutableDictionary<AestheticsId, Mapping<T>>.Empty,
@@ -69,13 +72,13 @@ public static class Chart
             Theme.Default
         );
 
-    public static Chart<T> SetAesthetics<T>(this Chart<T> chart, AestheticsId id, Expression<Func<T, IConvertible>> mapping)
+    public static GgChart<T> SetAesthetics<T>(this GgChart<T> chart, AestheticsId id, Expression<Func<T, IConvertible>> mapping)
         => chart with
         {
             Mappings = chart.Mappings.SetItem(id, new Mapping<T>(mapping))
         };
 
-    public static Chart<T> WithGeom<T>(this Chart<T> chart, Func<GeometryBuilder<T>, Geometry<T>> geomFactory)
+    public static GgChart<T> WithGeom<T>(this GgChart<T> chart, Func<GeometryBuilder<T>, Geometry<T>> geomFactory)
     {
         var geometry = geomFactory(GeometryBuilder.Create<T>());
 
@@ -85,13 +88,13 @@ public static class Chart
         };
     }
 
-    public static Chart<T> InFacets<T>(this Chart<T> chart, Expression<Func<T, IConvertible>> rowMap, Expression<Func<T, IConvertible>> colMap) =>
+    public static GgChart<T> InFacets<T>(this GgChart<T> chart, Expression<Func<T, IConvertible>> rowMap, Expression<Func<T, IConvertible>> colMap) =>
         chart with
         {
             Facet = new GridFaced<T>(rowMap, colMap)
         };
 
-    public static Chart<T> InFacets<T>(this Chart<T> chart, Expression<Func<T, IConvertible>> map) =>
+    public static GgChart<T> InFacets<T>(this GgChart<T> chart, Expression<Func<T, IConvertible>> map) =>
         chart with
         {
             Facet = new WrapFaced<T>(map)
