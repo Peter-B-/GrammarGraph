@@ -10,3 +10,6 @@ DataSets.GetDiamonds()
 .Take(10)
 .Dump();
 
+DataSets.GetFuelEconomies()
+.Take(10)
+.Dump();
