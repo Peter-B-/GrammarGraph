@@ -10,8 +10,7 @@ DataSets.GetDiamonds()
 	.CreateChart()
 	.SetAesthetics(AestheticsId.X, d => d.Carat)
 	.SetAesthetics(AestheticsId.Y, d => d.Price)
-	.WithGeom(b => b.Point())
-	.WithGeom(b => b.Line(
-				  g => g.WithAesthetics(AestheticsId.Color, d => d.Color)
-			  ))
+	.Add(b => b.Point())
+	.Add(b => b.Line())
 	.InFacets(d => d.Cut)
+	

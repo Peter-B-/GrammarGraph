@@ -14,9 +14,24 @@ public static class UsageSample
                     .CreateChart()
                     .SetAesthetics(AestheticsId.X, d => d.Carat)
                     .SetAesthetics(AestheticsId.Y, d => d.Price)
-                    .WithGeom(b => b.Point())
-                    .WithGeom(b => b.Line(g => g.WithAesthetics(AestheticsId.Color, d => d.Color)))
+                    .Add(b => b.Point())
+                    .Add(b => b.Line())
                     .InFacets(d => d.Cut)
             ;
+
+        data
+            .CreateChart()
+            .SetAesthetics(AestheticsId.X, d => d.Carat)
+            .SetAesthetics(AestheticsId.Y, d => d.Price)
+            .Add(b =>
+                b.Point(stat: Stat.Identity())
+            )
+            .Add(b => b.Step(stat: Stat.Ecdf()))
+            // .WithStatistics(b =>
+            //     b.Ecdf(g => g.Point())
+            //         )
+            .InFacets(d => d.Cut)
+            ;
+
     }
 }

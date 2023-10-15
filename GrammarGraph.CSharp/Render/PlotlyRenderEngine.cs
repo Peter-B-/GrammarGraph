@@ -1,17 +1,6 @@
+﻿using Plotly.NET;
 
-using Plotly.NET;
-
-namespace GrammarGraph.CSharp;
-
-public static class ChartExtensions
-{
-    public static GenericChart.GenericChart Plot<T>(this GgChart<T> chart)
-    {
-        var engine = new PlotlyRenderEngine();
-
-        return engine.Render(chart);
-    }
-}
+namespace GrammarGraph.CSharp.Render;
 
 public class PlotlyRenderEngine
 {
