@@ -13,7 +13,7 @@ public record GgChart<T>(
     IEnumerable<T> Data,
     ImmutableList<Layer<T>> Layers,
     ImmutableList<Scale> Scales,
-    ImmutableDictionary<AestheticsId, Mapping<T>> Mappings,
+    ImmutableDictionary<AestheticsId, Mapping<T>> Aesthetics,
     ImmutableList<Coordinate> Coordinates,
     Facet<T>? Facet,
     ImmutableList<Label> Labels,
@@ -43,7 +43,7 @@ public static class GgChart
     {
         return chart with
         {
-            Mappings = chart.Mappings.SetItem(id, new Mapping<T>(mapping))
+            Aesthetics = chart.Aesthetics.SetItem(id, new Mapping<T>(mapping))
         };
     }
 

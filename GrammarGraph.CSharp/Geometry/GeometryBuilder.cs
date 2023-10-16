@@ -8,19 +8,25 @@ public class GeometryBuilder<T>
     public Layer<T> Line(Func<Layer<T>, Layer<T>>? config = null,
         Statistic? stat = null)
     {
-        return Create(config, new LineGeometry<T>(), stat ?? Stat.Identity());
+        return Create(config,
+            new LineGeometry<T>(),
+            stat ?? Stat.Identity());
     }
 
     public Layer<T> Step(Func<Layer<T>, Layer<T>>? config = null,
         Statistic? stat = null)
     {
-        return Create(config, new LineGeometry<T>(LineType.Step), stat ?? Stat.Identity());
+        return Create(config,
+            new LineGeometry<T>(LineType.Step),
+            stat ?? Stat.Identity());
     }
 
     public Layer<T> Point(Func<Layer<T>, Layer<T>>? config = null,
         Statistic? stat = null)
     {
-        return Create(config, new PointGeometry<T>(), stat ?? Stat.Identity());
+        return Create(config,
+            new PointGeometry<T>(),
+            stat ?? Stat.Identity());
     }
 
     private static Layer<T> Create(

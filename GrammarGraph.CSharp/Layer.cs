@@ -7,5 +7,5 @@ namespace GrammarGraph.CSharp;
 public record Layer<T>(
     Geometry<T> Geometry,
     Statistic Stat,
-    ImmutableDictionary<AestheticsId, Mapping<T>> Mappings
+    ImmutableDictionary<AestheticsId, Mapping<T>> Aesthetics
 );

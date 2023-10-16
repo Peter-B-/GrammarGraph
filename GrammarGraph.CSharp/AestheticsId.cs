@@ -14,6 +14,8 @@ public record AestheticsId(string Id)
         return new AestheticsId(id);
     }
 
+    private string ToDump() => Id;
+
     public static class Known
     {
         public static string Color => "color";
