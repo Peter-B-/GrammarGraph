@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq.Expressions;
 using GrammarGraph.CSharp.Internal;
+using Microsoft.FSharp.Collections;
 using Microsoft.FSharp.Core;
 using Plotly.NET;
 
@@ -34,9 +35,21 @@ public class PlotlyRenderEngine
             .Select(ApplyStatistics)
             .ToImmutableArray();
 
-        var firstLayer = layerData.First();
+        var traces =
+            layerData
+                .Select(CreatePointChart)
+                .Aggregate(FSharpList<Trace>.Empty, (list, trace) => FSharpList<Trace>.Cons(trace, list));
 
+        return GenericChart.GenericChart.NewMultiChart(
+            traces,
+            Layout.init<string>(),
+            Config.init(),
+            DisplayOptions.init() 
+            );
+    }
 
+    private static Trace CreatePointChart<T>(LayerData<T> firstLayer)
+    {
         var xType = firstLayer.Data[AestheticsId.X].Type;
         var yType = firstLayer.Data[AestheticsId.Y].Type;
 
@@ -50,29 +63,33 @@ public class PlotlyRenderEngine
         var resultChart = (xType, yType) switch
         {
             (DataColumnType.Double, DataColumnType.Double) =>
-                Chart2D.Chart.Point<double, double, string>(
-                    firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
-                    firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
+                Trace2D.initScatter(FSharpFunc<Trace2D, Trace2D>.FromConverter(input => input)),
+                //Chart2D.Chart.Point<double, double, string>(
+                //    firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
+                //    firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values,
+                //    MarkerColor: color
+                //),
             (DataColumnType.Factor, DataColumnType.Double) =>
-                Chart2D.Chart.Point<string, double, string>(
-                    firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
-                    firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
+                Trace2D.initScatter(FSharpFunc<Trace2D, Trace2D>.FromConverter(input => input)),
+                //Chart2D.Chart.Point<string, double, string>(
+                //    firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
+                //    firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values,
+                //    MarkerColor: color
+                //),
             (DataColumnType.Double, DataColumnType.Factor) =>
-                Chart2D.Chart.Point<double, string, string>(
-                    firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
-                    firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
+                Trace2D.initScatter(FSharpFunc<Trace2D, Trace2D>.FromConverter(input => input)),
+                //Chart2D.Chart.Point<double, string, string>(
+                //    firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
+                //    firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
+                //    MarkerColor: color
+                //),
             (DataColumnType.Factor, DataColumnType.Factor) =>
-                Chart2D.Chart.Point<string, string, string>(
-                    firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
-                    firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
+                Trace2D.initScatter(FSharpFunc<Trace2D, Trace2D>.FromConverter(input => input))
+                //Chart2D.Chart.Point<string, string, string>(
+                //    firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
+                //    firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
+                //    MarkerColor: color
+                //),
         };
 
         return resultChart;
