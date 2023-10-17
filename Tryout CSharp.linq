@@ -8,9 +8,9 @@
 
 DataSets.GetDiamonds()
 	.CreateChart()
-	.SetAesthetics(AestheticsId.X, d => d.Length)
+	//.SetAesthetics(AestheticsId.X, d => d.Length)
 	.SetAesthetics(AestheticsId.Y, d => d.Table)
-	.Add(b => b.Point())
+	.Add(b => b.Point(stat: Stat.Ecdf()))
 	.Add(b => b.Line())
 	.InFacets(d => d.Cut)
 	
