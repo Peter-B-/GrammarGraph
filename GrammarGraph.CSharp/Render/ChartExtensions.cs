@@ -1,4 +1,3 @@
-
 using Plotly.NET;
 
 namespace GrammarGraph.CSharp.Render;

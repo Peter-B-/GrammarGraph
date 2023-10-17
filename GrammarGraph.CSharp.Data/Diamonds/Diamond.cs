@@ -1,10 +1,10 @@
 namespace GrammarGraph.CSharp.Data.Diamonds;
 
 /// <summary>
-/// An item from the diamonds data set shipped with ggplot.
-/// <para>
-///     See <see href="https://ggplot2.tidyverse.org/reference/diamonds.html"/>.
-/// </para>
+///     An item from the diamonds data set shipped with ggplot.
+///     <para>
+///         See <see href="https://ggplot2.tidyverse.org/reference/diamonds.html" />.
+///     </para>
 /// </summary>
 /// <param name="Carat">Weight of the diamond in [ct]</param>
 /// <param name="Cut">Quality of the cut</param>

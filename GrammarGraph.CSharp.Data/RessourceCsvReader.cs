@@ -10,7 +10,7 @@ internal static class ResourceCsvReader
         var resourceName = $"GrammarGraph.CSharp.Data.DataSets.{name}.csv";
 
         using var stream = assembly.GetManifestResourceStream(resourceName)
-            ?? throw new ResourceNotFoundException($"Embedded resource {resourceName} not found.");
+                           ?? throw new ResourceNotFoundException($"Embedded resource {resourceName} not found.");
 
         using var reader = new StreamReader(stream);
         while (!reader.EndOfStream)

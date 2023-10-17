@@ -3,7 +3,7 @@
 public enum Color
 {
     /// <summary>
-    /// Worst
+    ///     Worst
     /// </summary>
     J,
     I,
@@ -11,8 +11,9 @@ public enum Color
     G,
     F,
     E,
+
     /// <summary>
-    /// Best
+    ///     Best
     /// </summary>
-    D,
+    D
 }

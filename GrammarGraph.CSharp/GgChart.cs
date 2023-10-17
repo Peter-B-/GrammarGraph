@@ -1,11 +1,8 @@
 using System.Collections.Immutable;
-using System.Data;
 using System.Linq.Expressions;
-using GrammarGraph.CSharp.Data.Diamonds;
 using GrammarGraph.CSharp.Facets;
 using GrammarGraph.CSharp.Geometry;
 using GrammarGraph.CSharp.Render;
-using Plotly.NET;
 
 namespace GrammarGraph.CSharp;
 

@@ -1,9 +1,8 @@
-using System.Collections.Immutable;
 using GrammarGraph.CSharp.Internal;
 
 namespace GrammarGraph.CSharp.Statistics;
 
-internal record IdentityStatistic() : Statistic()
+internal record IdentityStatistic : Statistic
 {
     public override DataFrame Compute(DataFrame data)
     {

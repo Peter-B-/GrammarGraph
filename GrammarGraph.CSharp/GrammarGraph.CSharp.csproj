@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Plotly.NET" Version="4.2.0" />
+    <PackageReference Include="Plotly.NET" Version="4.2.0"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GrammarGraph.CSharp.Data\GrammarGraph.CSharp.Data.csproj" />
+    <ProjectReference Include="..\GrammarGraph.CSharp.Data\GrammarGraph.CSharp.Data.csproj"/>
   </ItemGroup>
 </Project>

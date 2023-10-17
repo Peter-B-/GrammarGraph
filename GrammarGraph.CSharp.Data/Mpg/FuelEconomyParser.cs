@@ -25,12 +25,14 @@ public static class FuelEconomyParser
         );
     }
 
-    private static Drive ParseDrive(string part) =>
-        part switch
+    private static Drive ParseDrive(string part)
+    {
+        return part switch
         {
             "f" => Drive.Front,
             "r" => Drive.Rear,
             "4" => Drive.Four,
             _ => throw new ArgumentOutOfRangeException(nameof(part), part, $"\"{part}\" is an unknown Drive")
         };
+    }
 }

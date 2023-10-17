@@ -1,5 +1,4 @@
 using GrammarGraph.CSharp.Data;
-using GrammarGraph.CSharp.Data.Diamonds;
 using GrammarGraph.CSharp.Geometry;
 
 namespace GrammarGraph.CSharp;
@@ -33,6 +32,5 @@ public static class UsageSample
             //         )
             .InFacets(d => d.Cut)
             ;
-
     }
 }

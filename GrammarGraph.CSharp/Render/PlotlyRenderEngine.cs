@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq.Expressions;
-using System.Reflection.Emit;
 using GrammarGraph.CSharp.Internal;
+using Microsoft.FSharp.Core;
 using Plotly.NET;
 
 namespace GrammarGraph.CSharp.Render;
@@ -11,10 +11,8 @@ public class PlotlyRenderEngine
     public static Type GetObjectType<T>(Expression<Func<T, object>> expr)
     {
         if (expr.Body.NodeType is ExpressionType.Convert or ExpressionType.ConvertChecked)
-        {
             if (expr.Body is UnaryExpression unary)
                 return unary.Operand.Type;
-        }
 
         return expr.Body.Type;
     }
@@ -23,7 +21,7 @@ public class PlotlyRenderEngine
     {
         var combinedLayers = chart.Layers
             .Select(layer =>
-                        layer with {Aesthetics = CombineAesthetics(chart, layer)}
+                        layer with { Aesthetics = CombineAesthetics(chart, layer) }
             )
             .ToImmutableArray();
 
@@ -38,16 +36,52 @@ public class PlotlyRenderEngine
 
         var firstLayer = layerData.First();
 
-        return Chart2D.Chart.Point<double, double, string>(
-            firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
-            firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values
-        );
+
+        var xType = firstLayer.Data[AestheticsId.X].Type;
+        var yType = firstLayer.Data[AestheticsId.Y].Type;
+
+        var color = firstLayer.Data.TryGetColumn(AestheticsId.Color) switch
+        {
+            null => FSharpOption<Color>.None,
+            DoubleColumn doubleColumn => FSharpOption<Color>.None,
+            FactorColumn factorColumn => FSharpOption<Color>.Some(Color.fromKeyword(ColorKeyword.Aqua)),
+        };
+
+        var resultChart = (xType, yType) switch
+        {
+            (DataColumnType.Double, DataColumnType.Double) =>
+                Chart2D.Chart.Point<double, double, string>(
+                    firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
+                    firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values,
+                    MarkerColor: color
+                ),
+            (DataColumnType.Factor, DataColumnType.Double) =>
+                Chart2D.Chart.Point<string, double, string>(
+                    firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
+                    firstLayer.Data.GetDoubleColumn(AestheticsId.Y).Values,
+                    MarkerColor: color
+                ),
+            (DataColumnType.Double, DataColumnType.Factor) =>
+                Chart2D.Chart.Point<double, string, string>(
+                    firstLayer.Data.GetDoubleColumn(AestheticsId.X).Values,
+                    firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
+                    MarkerColor: color
+                ),
+            (DataColumnType.Factor, DataColumnType.Factor) =>
+                Chart2D.Chart.Point<string, string, string>(
+                    firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
+                    firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
+                    MarkerColor: color
+                ),
+        };
+
+        return resultChart;
     }
 
     private LayerData<T> ApplyStatistics<T>(LayerData<T> layerData)
     {
         var dataFrame = layerData.Layer.Stat.Compute(layerData.Data);
-        return layerData with {Data = dataFrame};
+        return layerData with { Data = dataFrame };
     }
 
     private ImmutableDictionary<AestheticsId, Mapping<T>> CombineAesthetics<T>(GgChart<T> chart, Layer<T> layer)
@@ -65,8 +99,8 @@ public class PlotlyRenderEngine
             Func<T, double> extract = objectType switch
             {
                 _ when objectType == typeof(double) => d => (double)accessor(d),
-                _ when objectType == typeof(float) => d => (double)(float)accessor(d),
-                _ when objectType == typeof(int) => d => (double)(int)accessor(d),
+                _ when objectType == typeof(float) => d => (float)accessor(d),
+                _ when objectType == typeof(int) => d => (int)accessor(d)
             };
 
             var values = data
@@ -78,7 +112,7 @@ public class PlotlyRenderEngine
         if (objectType == typeof(string))
         {
             var values = data
-                .Select(d => (string) accessor(d))
+                .Select(d => (string)accessor(d))
                 .ToImmutableArray();
             return new FactorColumn(values);
         }

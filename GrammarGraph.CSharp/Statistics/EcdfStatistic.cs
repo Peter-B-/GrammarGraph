@@ -13,7 +13,7 @@ public record EcdfStatistic : Statistic
             (true, true) => throw new GraphicsConfigurationException($"Ecdf statistics expects either {AestheticsId.X} or {AestheticsId.Y} to be configured."),
             (false, false) => throw new GraphicsConfigurationException($"Ecdf statistics expects either {AestheticsId.X} or {AestheticsId.Y} to be configured."),
             (true, false) => (AestheticsId.X, AestheticsId.Y),
-            (false, true) => (AestheticsId.Y, AestheticsId.X),
+            (false, true) => (AestheticsId.Y, AestheticsId.X)
         };
 
         var input = data.GetDoubleColumn(valueAesthetics);

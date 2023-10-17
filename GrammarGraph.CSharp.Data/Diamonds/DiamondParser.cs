@@ -6,43 +6,53 @@ internal static class DiamondParser
 {
     private static readonly CultureInfo C = CultureInfo.InvariantCulture;
 
-    private static Clarity ParseClarity(string v) => v.Trim('"') switch
+    private static Clarity ParseClarity(string v)
     {
-        "I1" => Clarity.I1,
-        "SI2" => Clarity.SI2,
-        "SI1" => Clarity.SI1,
-        "VS2" => Clarity.VS2,
-        "VS1" => Clarity.VS1,
-        "VVS2" => Clarity.VVS2,
-        "VVS1" => Clarity.VVS1,
-        "IF" => Clarity.IF,
-        _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Clarity"),
-    };
+        return v.Trim('"') switch
+        {
+            "I1" => Clarity.I1,
+            "SI2" => Clarity.SI2,
+            "SI1" => Clarity.SI1,
+            "VS2" => Clarity.VS2,
+            "VS1" => Clarity.VS1,
+            "VVS2" => Clarity.VVS2,
+            "VVS1" => Clarity.VVS1,
+            "IF" => Clarity.IF,
+            _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Clarity")
+        };
+    }
 
-    private static Color ParseColor(string v) => v.Trim('"') switch
+    private static Color ParseColor(string v)
     {
-        "J" => Color.J,
-        "I" => Color.I,
-        "H" => Color.H,
-        "G" => Color.G,
-        "F" => Color.F,
-        "E" => Color.E,
-        "D" => Color.D,
-        _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Color"),
-    };
+        return v.Trim('"') switch
+        {
+            "J" => Color.J,
+            "I" => Color.I,
+            "H" => Color.H,
+            "G" => Color.G,
+            "F" => Color.F,
+            "E" => Color.E,
+            "D" => Color.D,
+            _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Color")
+        };
+    }
 
-    private static Cut ParseCut(string v) => v.Trim('"') switch
+    private static Cut ParseCut(string v)
     {
-        "Fair" => Cut.Fair,
-        "Good" => Cut.Good,
-        "Very Good" => Cut.VeryGood,
-        "Premium" => Cut.Premium,
-        "Ideal" => Cut.Ideal,
-        _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Cut"),
-    };
+        return v.Trim('"') switch
+        {
+            "Fair" => Cut.Fair,
+            "Good" => Cut.Good,
+            "Very Good" => Cut.VeryGood,
+            "Premium" => Cut.Premium,
+            "Ideal" => Cut.Ideal,
+            _ => throw new ArgumentOutOfRangeException(nameof(v), v, $"\"{v}\" is an unknown Cut")
+        };
+    }
 
-    public static Diamond ParseDiamond(string[] parts) =>
-        new Diamond(
+    public static Diamond ParseDiamond(string[] parts)
+    {
+        return new Diamond(
             double.Parse(parts[0], C),
             ParseCut(parts[1]),
             ParseColor(parts[2]),
@@ -53,5 +63,6 @@ internal static class DiamondParser
             double.Parse(parts[7], C),
             double.Parse(parts[8], C),
             double.Parse(parts[9], C)
-            );
+        );
+    }
 }

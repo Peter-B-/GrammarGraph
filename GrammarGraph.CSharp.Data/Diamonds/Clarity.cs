@@ -3,7 +3,7 @@
 public enum Clarity
 {
     /// <summary>
-    /// Worst
+    ///     Worst
     /// </summary>
     I1,
     SI2,
@@ -12,8 +12,9 @@ public enum Clarity
     VS1,
     VVS2,
     VVS1,
+
     /// <summary>
-    /// Best
+    ///     Best
     /// </summary>
-    IF,
+    IF
 }

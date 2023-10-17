@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\GrammarGraph.Data\DataSets\diamonds.csv" Link="DataSets\diamonds.csv" />
-    <EmbeddedResource Include="..\GrammarGraph.Data\DataSets\mpg.csv" Link="DataSets\mpg.csv" />
+    <EmbeddedResource Include="..\GrammarGraph.Data\DataSets\diamonds.csv" Link="DataSets\diamonds.csv"/>
+    <EmbeddedResource Include="..\GrammarGraph.Data\DataSets\mpg.csv" Link="DataSets\mpg.csv"/>
   </ItemGroup>
 
 </Project>
