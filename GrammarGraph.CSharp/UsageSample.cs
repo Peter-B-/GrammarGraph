@@ -15,7 +15,7 @@ public static class UsageSample
                     .CreateChart()
                     .SetAesthetics(AestheticsId.X, d => d.Carat)
                     .SetAesthetics(AestheticsId.Y, d => d.Price)
-                    .Add(b => b.Point(l => l.WithAesthetics(AestheticsId.Color, d => d.Color)))
+                    .Add(b => b.Point(l => l.SetAesthetics(AestheticsId.Color, d => d.Color)))
                     .Add(b => b.Line())
                     .InFacets(d => d.Cut)
             ;

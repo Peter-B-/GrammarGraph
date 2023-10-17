@@ -4,7 +4,7 @@ namespace GrammarGraph.CSharp.Geometry;
 
 public static class LayerConfig
 {
-    public static Layer<T> WithAesthetics<T>(this Layer<T> layer, AestheticsId id, Expression<Func<T, IConvertible>> mapping)
+    public static Layer<T> SetAesthetics<T>(this Layer<T> layer, AestheticsId id, Expression<Func<T, object>> mapping)
     {
         return layer with
         {
