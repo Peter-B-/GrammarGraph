@@ -43,16 +43,6 @@ public class PlotlyRenderEngine
         return chart.Aesthetics.SetItems(layer.Aesthetics);
     }
 
-    private ImmutableArray<Layer<T>> GetLayers<T>(GgChart<T> chart)
-    {
-        return
-            chart.Layers
-                .Select(layer =>
-                            layer with {Aesthetics = CombineAesthetics(chart, layer)}
-                )
-                .ToImmutableArray();
-    }
-
     private static LayerData<T> GetRawData<T>(Layer<T> layer, IEnumerable<T> data)
     {
         var columns =
