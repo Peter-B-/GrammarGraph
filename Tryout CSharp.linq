@@ -10,9 +10,9 @@
 DataSets.GetDiamonds()
 	.Take(1000)
 	.CreateChart()
-	.SetAesthetics(AestheticsId.X, d => (float)d.Price)
-	.SetAesthetics(AestheticsId.Y, d => (int)d.Carat)
-	.Add(b => b.Point(b => b.SetAesthetics(AestheticsId.Color, d => d.Color)))
+	.SetAesthetics(AestheticsId.X, d => d.Carat)
+	.SetAesthetics(AestheticsId.Y, d => d.Price)
+	.Add(b => b.Point(b => b.SetAesthetics(AestheticsId.Color, d => d.Cut)))
 	.Add(b => b.Line())
 	.InFacets(d => d.Cut)
 	

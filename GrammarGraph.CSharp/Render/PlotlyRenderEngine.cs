@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
+using System.Drawing;
 using System.Linq.Expressions;
 using GrammarGraph.CSharp.Internal;
 using Microsoft.FSharp.Core;
 using Plotly.NET;
+using Color = Plotly.NET.Color;
 
 namespace GrammarGraph.CSharp.Render;
 
@@ -21,7 +23,7 @@ public class PlotlyRenderEngine
     {
         var combinedLayers = chart.Layers
             .Select(layer =>
-                        layer with { Aesthetics = CombineAesthetics(chart, layer) }
+                layer with { Aesthetics = CombineAesthetics(chart, layer) }
             )
             .ToImmutableArray();
 
@@ -44,7 +46,7 @@ public class PlotlyRenderEngine
         {
             null => FSharpOption<Color>.None,
             DoubleColumn doubleColumn => FSharpOption<Color>.None,
-            FactorColumn factorColumn => FSharpOption<Color>.Some(Color.fromKeyword(ColorKeyword.Aqua)),
+            FactorColumn factorColumn => MapToColor(factorColumn),
         };
 
         var resultChart = (xType, yType) switch
@@ -76,6 +78,37 @@ public class PlotlyRenderEngine
         };
 
         return resultChart;
+    }
+
+    private static readonly ImmutableArray<Color> Colors = ImmutableArray.Create(new[]
+    {
+        Color.fromRGB(166, 206, 227),
+        Color.fromRGB(31, 120, 180),
+        Color.fromRGB(178, 223, 138),
+        Color.fromRGB(51, 160, 44),
+        Color.fromRGB(251, 154, 153),
+        Color.fromRGB(227, 26, 28),
+        Color.fromRGB(253, 191, 111),
+        Color.fromRGB(255, 127, 0),
+        Color.fromRGB(202, 178, 214),
+        Color.fromRGB(106, 61, 154),
+        Color.fromRGB(255, 255, 153),
+        Color.fromRGB(177, 89, 40),
+    });
+
+    private FSharpOption<Color> MapToColor(FactorColumn factor)
+    {
+        var colorMap =
+            factor.Values
+                .Distinct()
+                .Select((v, i) => new { Key = v, Color = Colors[i]})
+                .ToDictionary(x => x.Key, x => x.Color);
+
+        var colors =
+            factor.Values
+                .Select(v => colorMap[v]);
+
+        return FSharpOption<Color>.Some(Color.fromColors(colors));
     }
 
     private LayerData<T> ApplyStatistics<T>(LayerData<T> layerData)
