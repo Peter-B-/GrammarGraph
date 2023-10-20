@@ -36,13 +36,6 @@ public static class GgChart
         );
     }
 
-    public static GgChart<T> SetAesthetics<T>(this GgChart<T> chart, AestheticsId id, Expression<Func<T, object>> mapping)
-    {
-        return chart with
-        {
-            Aesthetics = chart.Aesthetics.SetItem(id, new Mapping<T>(mapping))
-        };
-    }
 
     public static GgChart<T> AddLayer<T>(this GgChart<T> chart, Layer<T> layer)
     {

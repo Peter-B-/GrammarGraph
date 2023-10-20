@@ -1,15 +1,17 @@
 using System.Collections.Immutable;
-using System.Drawing;
 using System.Linq.Expressions;
 using GrammarGraph.CSharp.Internal;
 using Microsoft.FSharp.Core;
 using Plotly.NET;
-using Color = Plotly.NET.Color;
 
 namespace GrammarGraph.CSharp.Render;
 
 public class PlotlyRenderEngine
 {
+    private static readonly ImmutableArray<Color> Colors = ImmutableArray.Create(Color.fromRGB(166, 206, 227), Color.fromRGB(31, 120, 180), Color.fromRGB(178, 223, 138), Color.fromRGB(51, 160, 44),
+        Color.fromRGB(251, 154, 153), Color.fromRGB(227, 26, 28), Color.fromRGB(253, 191, 111), Color.fromRGB(255, 127, 0), Color.fromRGB(202, 178, 214), Color.fromRGB(106, 61, 154),
+        Color.fromRGB(255, 255, 153), Color.fromRGB(177, 89, 40));
+
     public static Type GetObjectType<T>(Expression<Func<T, object>> expr)
     {
         if (expr.Body.NodeType is ExpressionType.Convert or ExpressionType.ConvertChecked)
@@ -46,7 +48,7 @@ public class PlotlyRenderEngine
         {
             null => FSharpOption<Color>.None,
             DoubleColumn doubleColumn => FSharpOption<Color>.None,
-            FactorColumn factorColumn => MapToColor(factorColumn),
+            FactorColumn factorColumn => MapToColor(factorColumn)
         };
 
         var resultChart = (xType, yType) switch
@@ -74,34 +76,18 @@ public class PlotlyRenderEngine
                     firstLayer.Data.GetFactorColumn(AestheticsId.X).Values,
                     firstLayer.Data.GetFactorColumn(AestheticsId.Y).Values,
                     MarkerColor: color
-                ),
+                )
         };
 
         return resultChart;
     }
-
-    private static readonly ImmutableArray<Color> Colors = ImmutableArray.Create(new[]
-    {
-        Color.fromRGB(166, 206, 227),
-        Color.fromRGB(31, 120, 180),
-        Color.fromRGB(178, 223, 138),
-        Color.fromRGB(51, 160, 44),
-        Color.fromRGB(251, 154, 153),
-        Color.fromRGB(227, 26, 28),
-        Color.fromRGB(253, 191, 111),
-        Color.fromRGB(255, 127, 0),
-        Color.fromRGB(202, 178, 214),
-        Color.fromRGB(106, 61, 154),
-        Color.fromRGB(255, 255, 153),
-        Color.fromRGB(177, 89, 40),
-    });
 
     private FSharpOption<Color> MapToColor(FactorColumn factor)
     {
         var colorMap =
             factor.Values
                 .Distinct()
-                .Select((v, i) => new { Key = v, Color = Colors[i]})
+                .Select((v, i) => new { Key = v, Color = Colors[i] })
                 .ToDictionary(x => x.Key, x => x.Color);
 
         var colors =
@@ -127,34 +113,34 @@ public class PlotlyRenderEngine
         var objectType = GetObjectType(mapping.Expression);
         var accessor = mapping.Expression.Compile();
 
-        if (objectType == typeof(double) || objectType == typeof(float) || objectType == typeof(int))
-        {
-            Func<T, double> extract = objectType switch
+        if (!mapping.AsFactor)
+            if (objectType == typeof(double) || objectType == typeof(float) || objectType == typeof(int))
             {
-                _ when objectType == typeof(double) => d => (double)accessor(d),
-                _ when objectType == typeof(float) => d => (float)accessor(d),
-                _ when objectType == typeof(int) => d => (int)accessor(d)
-            };
+                Func<T, double> extract = objectType switch
+                {
+                    _ when objectType == typeof(double) => d => (double)accessor(d),
+                    _ when objectType == typeof(float) => d => (float)accessor(d),
+                    _ when objectType == typeof(int) => d => (int)accessor(d)
+                };
 
-            var values = data
-                .Select(d => extract(d))
-                .ToImmutableArray();
-            return new DoubleColumn(values);
-        }
+                var values = data
+                    .Select(d => extract(d))
+                    .ToImmutableArray();
+                return new DoubleColumn(values);
+            }
 
         if (objectType == typeof(string))
         {
             var values = data
-                .Select(d => (string)accessor(d))
-                .ToImmutableArray();
-            return new FactorColumn(values);
+                .Select(d => (string)accessor(d));
+            return FactorColumn.FromStrings(values);
         }
 
         {
             var values = data
                 .Select(d => accessor(d).ToString() ?? "na.")
                 .ToImmutableArray();
-            return new FactorColumn(values);
+            return FactorColumn.FromStrings(values);
         }
     }
 

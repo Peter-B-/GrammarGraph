@@ -3,5 +3,6 @@
 namespace GrammarGraph.CSharp;
 
 public record Mapping<T>(
-    Expression<Func<T, object>> Expression
+    Expression<Func<T, object>> Expression,
+    bool AsFactor
 );
