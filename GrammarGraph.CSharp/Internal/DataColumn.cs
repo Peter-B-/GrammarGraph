@@ -13,9 +13,41 @@ public record DoubleColumn(ImmutableArray<double> Values) : DataColumn
     public override DataColumnType Type => DataColumnType.Double;
 }
 
-public record FactorColumn(ImmutableArray<string> Values) : DataColumn
+public record FactorColumn(ImmutableArray<int> Indices, ImmutableArray<string> Levels) : DataColumn
 {
     public override DataColumnType Type => DataColumnType.Factor;
+
+    public IEnumerable<string> Values => Indices.Select(i => Levels[i]);
+
+    public static FactorColumn FromStrings(IEnumerable<string> items, IEqualityComparer<string>? comparer = null)
+    {
+        var itemsList = items.ToList();
+        var levels =
+            itemsList
+                .Distinct(comparer)
+                .ToImmutableArray();
+
+        return FromStrings(itemsList, levels, comparer);
+    }
+
+    public static FactorColumn FromStrings(IEnumerable<string> items, ImmutableArray<string> levels, IEqualityComparer<string>? comparer = null)
+    {
+        comparer ??= StringComparer.Ordinal;
+
+        var itemsList = items as IList<string> ?? items.ToList();
+
+        var levelsMap = levels
+            .Select((l, i) => new { Level = l, Idx = i })
+            .ToDictionary(i => i.Level, i => i.Idx, comparer);
+
+        var builder = ImmutableArray.CreateBuilder<int>(itemsList.Count);
+
+        builder.AddRange(itemsList
+            .Select(level => levelsMap[level])
+        );
+
+        return new FactorColumn(builder.MoveToImmutable(), levels);
+    }
 }
 
 public enum DataColumnType
@@ -38,18 +70,18 @@ public record DataFrame(
     public DoubleColumn GetDoubleColumn(AestheticsId id)
     {
         return Columns[id] as DoubleColumn ??
-            throw new UnexpectedDataColumnTypeException(typeof(DoubleColumn), Columns[id].GetType());
+               throw new UnexpectedDataColumnTypeException(typeof(DoubleColumn), Columns[id].GetType());
     }
 
     public FactorColumn GetFactorColumn(AestheticsId id)
     {
         return Columns[id] as FactorColumn ??
-            throw new UnexpectedDataColumnTypeException(typeof(FactorColumn), Columns[id].GetType());
+               throw new UnexpectedDataColumnTypeException(typeof(FactorColumn), Columns[id].GetType());
     }
 
     public DataColumn? TryGetColumn(AestheticsId id)
     {
-        Columns.TryGetValue(id, out DataColumn? col);
+        Columns.TryGetValue(id, out var col);
         return col;
     }
 }
