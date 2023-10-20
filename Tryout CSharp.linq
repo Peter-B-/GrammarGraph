@@ -8,7 +8,7 @@
 </Query>
 
 DataSets.GetDiamonds()
-	.Take(1000)
+	.Take(5)
 	.CreateChart()
 	.SetAesthetics(AestheticsId.X, d => d.Carat)
 	.SetAesthetics(AestheticsId.Y, d => d.Price)

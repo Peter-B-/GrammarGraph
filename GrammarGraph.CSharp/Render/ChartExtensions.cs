@@ -6,8 +6,10 @@ public static class ChartExtensions
 {
     public static GenericChart.GenericChart Plot<T>(this GgChart<T> chart)
     {
-        var engine = new PlotlyRenderEngine();
+        var builder = new PlotBuilder();
+        var plot = builder.BuildPlot(chart);
 
-        return engine.Render(chart);
+        var engine = new PlotlyRenderEngine();
+        return engine.Render(plot);
     }
 }
