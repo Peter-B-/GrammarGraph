@@ -11,6 +11,18 @@ public abstract record DataColumn
 public record DoubleColumn(ImmutableArray<double> Values) : DataColumn
 {
     public override DataColumnType Type => DataColumnType.Double;
+
+    public override string ToString()
+    {
+        const int limit = 10;
+        var values = Values
+            .Take(limit)
+            .Select(v => v.ToString("g2"));
+
+        return $"num [{Values.Length}]: {string.Join("; ", values)}{(Values.Length > limit?", ...":"")}";
+    }
+
+    private string ToDump() => ToString();
 }
 
 public record FactorColumn(ImmutableArray<int> Indices, ImmutableArray<string> Levels) : DataColumn
@@ -29,6 +41,18 @@ public record FactorColumn(ImmutableArray<int> Indices, ImmutableArray<string> L
 
         return FromStrings(itemsList, levels, comparer);
     }
+
+    public override string ToString()
+    {
+        const int limit = 10;
+        var values = Values
+            .Take(limit);
+
+        return $"factor [{Indices.Length}] of {Levels.Length} levels: {string.Join("; ", values)}{(Indices.Length > limit?", ...":"")}";
+    }
+
+    private string ToDump() => ToString();
+
 
     public static FactorColumn FromStrings(IEnumerable<string> items, ImmutableArray<string> levels, IEqualityComparer<string>? comparer = null)
     {
