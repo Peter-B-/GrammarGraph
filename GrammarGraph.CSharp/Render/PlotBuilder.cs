@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using GrammarGraph.CSharp.Facets;
 using GrammarGraph.CSharp.Internal;
 
 namespace GrammarGraph.CSharp.Render;
@@ -13,10 +14,16 @@ public class PlotBuilder
             )
             .ToImmutableArray();
 
+        var chartData = chart.Data as IReadOnlyList<T> ?? chart.Data.ToList();
+
+        //var panelInfo = GetPanelInfo(chart);
+        //GetPanels(panelInfo, combinedLayers, chartData);
+
 
         var rawLayerData = combinedLayers
-            .Select(layer => GetRawData(layer, chart.Data))
+            .Select(layer => GetRawData(layer, chartData))
             .ToImmutableArray();
+
 
         var layerData = rawLayerData
             .Select(ApplyStatistics)
@@ -27,6 +34,31 @@ public class PlotBuilder
                 .ToImmutableArray()
         );
         return plot;
+    }
+
+    //private ImmutableArray<PanelData<T>> GetPanels<T>(PanelInfo<T> panelInfo, ImmutableArray<Layer<T>> combinedLayers, IReadOnlyList<T> chartData)
+    //{
+    //    chartData
+    //        .GroupBy()
+
+    //    return Enumerable.Range(0, panelInfo.Panels)
+    //        .Select(panel =>
+    //            new PanelData<T>(panelInfo.GetRow(panel), panelInfo.GetColumn(panel),
+    //                panelInfo.Labels[panel],
+    //                layers)
+    //        )
+    //        .ToImmutableArray();
+    //}
+
+    private PanelInfo<T> GetPanelInfo<T>(GgChart<T> chart)
+    {
+        return chart.Facet switch
+        {
+            null => PanelInfo<T>.Single,
+            GridFaced<T> gridFaced => throw new NotImplementedException(),
+            WrapFaced<T> wrapFaced => throw new NotImplementedException(),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
 
@@ -90,6 +122,42 @@ public class PlotBuilder
 
     private ImmutableDictionary<AestheticsId, Mapping<T>> CombineAesthetics<T>(GgChart<T> chart, Layer<T> layer)
     {
-        return chart.Aesthetics.SetItems(layer.Aesthetics);
+        return chart.Aesthetics
+            .SetItems(layer.Aesthetics)
+            .SetItems(chart.GetFacetAesthetics());
     }
 }
+
+internal static class ChartExtensionsIntern
+{
+    public static IEnumerable<KeyValuePair<AestheticsId, Mapping<T>>> GetFacetAesthetics<T>(this GgChart<T> chart)
+    {
+        return chart.Facet?.GetAesthetics() ?? Enumerable.Empty<KeyValuePair<AestheticsId, Mapping<T>>>();
+    }
+}
+
+public record PanelData<T>(
+    int Row,
+    int Column,
+    PanelLabel Label,
+    ImmutableArray<LayerData<T>> Layers)
+{
+}
+
+public record PanelInfo<T>(
+    int Panels,
+    int Rows,
+    int Columns,
+    ImmutableDictionary<int, PanelLabel> Labels,
+    Func<T, int> GetPanelId
+)
+{
+    public static PanelInfo<T> Single => new(
+        1,
+        1, 1,
+        ImmutableDictionary<int, PanelLabel>.Empty.Add(0, new PanelLabel(null, null)),
+        _ => 0
+    );
+}
+
+public record PanelLabel(string? RowLabel, string? ColumnLabel);

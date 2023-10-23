@@ -53,19 +53,19 @@ public static class GgChart
         };
     }
 
-    public static GgChart<T> InFacets<T>(this GgChart<T> chart, Expression<Func<T, IConvertible>> rowMap, Expression<Func<T, IConvertible>> colMap)
+    public static GgChart<T> InFacets<T>(this GgChart<T> chart, Expression<Func<T, object>> rowMap, Expression<Func<T, object>> colMap)
     {
         return chart with
         {
-            Facet = new GridFaced<T>(rowMap, colMap)
+            Facet = new GridFaced<T>(new Mapping<T>(rowMap, true), new Mapping<T>(colMap, true))
         };
     }
 
-    public static GgChart<T> InFacets<T>(this GgChart<T> chart, Expression<Func<T, IConvertible>> map)
+    public static GgChart<T> InFacets<T>(this GgChart<T> chart, Expression<Func<T, object>> map)
     {
         return chart with
         {
-            Facet = new WrapFaced<T>(map)
+            Facet = new WrapFaced<T>(new Mapping<T>(map, true))
         };
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GrammarGraph.CSharp;
+namespace GrammarGraph.CSharp;
 
 public record AestheticsId(string Id)
 {
@@ -19,7 +19,14 @@ public record AestheticsId(string Id)
         return Id;
     }
 
-    public static class Known
+    internal static class Intern
+    {
+        public static AestheticsId FacetRow => new(Known.FacetRow);
+        public static AestheticsId FacetColumn => new(Known.FacetColumn);
+        public static AestheticsId Facet => new(Known.Facet);
+    }
+
+    internal static class Known
     {
         public static string Color => "color";
         public static string Fill => "fill";
@@ -27,5 +34,8 @@ public record AestheticsId(string Id)
         public static string Shape => "shape";
         public static string X => "x";
         public static string Y => "y";
+        public static string FacetRow => "FacetRow";
+        public static string FacetColumn => "FacetColumn";
+        public static string Facet => "Facet";
     }
 }
