@@ -24,7 +24,7 @@ public class PlotlyRenderEngine
 
     public GenericChart.GenericChart Render(PlotDescription plot)
     {
-        var firstLayer = plot.Panels.First().Layers.First();
+        var firstLayer = plot.Layers.First();
 
         var data = firstLayer.Data;
 

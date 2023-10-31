@@ -26,9 +26,10 @@ public record EcdfStatistic : Statistic
             new(cumProbAesthetics, new DoubleColumn(cumProb))
         };
 
-        var newData = new DataFrame(data.Columns.SetItems(newColumns));
+        //var newData = new DataFrame(data.Columns.SetItems(newColumns));
 
-        return newData;
+        //return newData;
+        return data;
     }
 
     public static (ImmutableArray<double> values, ImmutableArray<double> cumulativeProbability) ComputeEcdf(ImmutableArray<double> data)

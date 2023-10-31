@@ -10,20 +10,18 @@ public class PlotBuilder
     {
         var combinedLayers = chart.Layers
             .Select(layer =>
-                layer with { Aesthetics = CombineAesthetics(chart, layer) }
+                        layer with {Aesthetics = CombineAesthetics(chart, layer)}
             )
             .ToImmutableArray();
 
         var chartData = chart.Data as IReadOnlyList<T> ?? chart.Data.ToList();
 
-        //var panelInfo = GetPanelInfo(chart);
-        //GetPanels(panelInfo, combinedLayers, chartData);
-
+        var facet = chart.Facet??new SingleFacet<T>();
+        var panels = facet.GetPanels(chartData);
 
         var rawLayerData = combinedLayers
-            .Select(layer => GetRawData(layer, chartData))
+            .Select(layer => GetRawData(layer, chartData, facet, panels))
             .ToImmutableArray();
-
 
         var layerData = rawLayerData
             .Select(ApplyStatistics)
@@ -36,33 +34,8 @@ public class PlotBuilder
         return plot;
     }
 
-    //private ImmutableArray<PanelData<T>> GetPanels<T>(PanelInfo<T> panelInfo, ImmutableArray<Layer<T>> combinedLayers, IReadOnlyList<T> chartData)
-    //{
-    //    chartData
-    //        .GroupBy()
 
-    //    return Enumerable.Range(0, panelInfo.Panels)
-    //        .Select(panel =>
-    //            new PanelData<T>(panelInfo.GetRow(panel), panelInfo.GetColumn(panel),
-    //                panelInfo.Labels[panel],
-    //                layers)
-    //        )
-    //        .ToImmutableArray();
-    //}
-
-    private PanelInfo<T> GetPanelInfo<T>(GgChart<T> chart)
-    {
-        return chart.Facet switch
-        {
-            null => PanelInfo<T>.Single,
-            GridFaced<T> gridFaced => throw new NotImplementedException(),
-            WrapFaced<T> wrapFaced => throw new NotImplementedException(),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
-
-    private static DataColumn CreateDataColumn<T>(IEnumerable<T> data, Mapping<T> mapping)
+    public static DataColumn CreateDataColumn<T>(IEnumerable<T> data, Mapping<T> mapping)
     {
         var objectType = PlotlyRenderEngine.GetObjectType(mapping.Expression);
         var accessor = mapping.Expression.Compile();
@@ -72,9 +45,9 @@ public class PlotBuilder
             {
                 Func<T, double> extract = objectType switch
                 {
-                    _ when objectType == typeof(double) => d => (double)accessor(d),
-                    _ when objectType == typeof(float) => d => (float)accessor(d),
-                    _ when objectType == typeof(int) => d => (int)accessor(d)
+                    _ when objectType == typeof(double) => d => (double) accessor(d),
+                    _ when objectType == typeof(float) => d => (float) accessor(d),
+                    _ when objectType == typeof(int) => d => (int) accessor(d)
                 };
 
                 var values = data
@@ -86,7 +59,7 @@ public class PlotBuilder
         if (objectType == typeof(string))
         {
             var values = data
-                .Select(d => (string)accessor(d));
+                .Select(d => (string) accessor(d));
             return FactorColumn.FromStrings(values);
         }
 
@@ -98,7 +71,19 @@ public class PlotBuilder
         }
     }
 
-    private static LayerData<T> GetRawData<T>(Layer<T> layer, IEnumerable<T> data)
+
+    private LayerData<T> ApplyStatistics<T>(LayerData<T> layerData)
+    {
+        var dataFrame = layerData.Layer.Stat.Compute(layerData.Data);
+        return layerData with {Data = dataFrame};
+    }
+
+    private ImmutableDictionary<AestheticsId, Mapping<T>> CombineAesthetics<T>(GgChart<T> chart, Layer<T> layer) =>
+        chart.Aesthetics
+            .SetItems(layer.Aesthetics);
+
+
+    private static LayerData<T> GetRawData<T>(Layer<T> layer, IReadOnlyList<T> data, Facet<T> facet, ImmutableArray<Panel> panels)
     {
         var columns =
             layer.Aesthetics
@@ -110,29 +95,10 @@ public class PlotBuilder
                     return (Key: aestheticsId, Data: dataColumn);
                 })
                 .ToImmutableDictionary(m => m.Key, m => m.Data);
+
+        var panelMap = facet.AssignToPanels(data, panels);
+
         return new LayerData<T>(layer, new DataFrame(columns));
-    }
-
-
-    private LayerData<T> ApplyStatistics<T>(LayerData<T> layerData)
-    {
-        var dataFrame = layerData.Layer.Stat.Compute(layerData.Data);
-        return layerData with { Data = dataFrame };
-    }
-
-    private ImmutableDictionary<AestheticsId, Mapping<T>> CombineAesthetics<T>(GgChart<T> chart, Layer<T> layer)
-    {
-        return chart.Aesthetics
-            .SetItems(layer.Aesthetics)
-            .SetItems(chart.GetFacetAesthetics());
-    }
-}
-
-internal static class ChartExtensionsIntern
-{
-    public static IEnumerable<KeyValuePair<AestheticsId, Mapping<T>>> GetFacetAesthetics<T>(this GgChart<T> chart)
-    {
-        return chart.Facet?.GetAesthetics() ?? Enumerable.Empty<KeyValuePair<AestheticsId, Mapping<T>>>();
     }
 }
 

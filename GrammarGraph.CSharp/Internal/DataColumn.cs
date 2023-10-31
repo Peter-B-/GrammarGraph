@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Exceptions;
 
 namespace GrammarGraph.CSharp.Internal;
 
@@ -78,34 +77,4 @@ public enum DataColumnType
 {
     Double,
     Factor
-}
-
-public record DataFrame(
-    ImmutableDictionary<AestheticsId, DataColumn> Columns
-)
-{
-    public DataColumn this[AestheticsId aestheticsId] => Columns[aestheticsId];
-
-    public bool Contains(AestheticsId id)
-    {
-        return Columns.ContainsKey(id);
-    }
-
-    public DoubleColumn GetDoubleColumn(AestheticsId id)
-    {
-        return Columns[id] as DoubleColumn ??
-               throw new UnexpectedDataColumnTypeException(typeof(DoubleColumn), Columns[id].GetType());
-    }
-
-    public FactorColumn GetFactorColumn(AestheticsId id)
-    {
-        return Columns[id] as FactorColumn ??
-               throw new UnexpectedDataColumnTypeException(typeof(FactorColumn), Columns[id].GetType());
-    }
-
-    public DataColumn? TryGetColumn(AestheticsId id)
-    {
-        Columns.TryGetValue(id, out var col);
-        return col;
-    }
 }
