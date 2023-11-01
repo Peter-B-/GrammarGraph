@@ -10,7 +10,6 @@ public record PlotDescription(
 );
 
 public record Layer(
-    ImmutableDictionary<AestheticsId, Factor> Identifiers,
     ImmutableArray<Group> Groups,
     DataFrame Data
 );
@@ -19,8 +18,8 @@ public abstract record Panel(
 );
 
 public record GridPanel(
-    string? RowLabel,
-    string? ColLabel,
+    string RowLabel,
+    string ColLabel,
     int RowIdx,
     int ColIdx
 ):Panel;
@@ -30,6 +29,8 @@ public record WrapPanel(
     int RowIdx,
     int ColIdx
 ) : Panel;
+
+public record SinglePanel : Panel;
 
 public record Factor(
     int Index,

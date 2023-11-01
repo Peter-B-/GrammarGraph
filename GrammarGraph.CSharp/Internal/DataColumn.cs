@@ -24,7 +24,7 @@ public record DoubleColumn(ImmutableArray<double> Values) : DataColumn
     private string ToDump() => ToString();
 }
 
-public record FactorColumn(ImmutableArray<int> Indices, ImmutableArray<string> Levels) : DataColumn
+public record FactorColumn(ImmutableArray<int> Indices, ImmutableArray<string> Levels, IEqualityComparer<string> Comparer) : DataColumn
 {
     public override DataColumnType Type => DataColumnType.Factor;
 
@@ -69,7 +69,7 @@ public record FactorColumn(ImmutableArray<int> Indices, ImmutableArray<string> L
             .Select(level => levelsMap[level])
         );
 
-        return new FactorColumn(builder.MoveToImmutable(), levels);
+        return new FactorColumn(builder.MoveToImmutable(), levels, comparer);
     }
 }
 

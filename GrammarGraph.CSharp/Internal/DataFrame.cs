@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using GrammarGraph.CSharp.Exceptions;
+using GrammarGraph.CSharp.Extensions;
 using GrammarGraph.CSharp.Render;
 using JetBrains.Annotations;
 
@@ -45,6 +46,18 @@ public class DataFrameItem(DataFrame dataFrame, int index)
     public Group Group => dataFrame.Groups[Index];
 }
 
-public record Group
+public record Group(ImmutableDictionary<AestheticsId, Factor> Identifiers)
 {
+    public override string ToString()
+    {
+        if (Identifiers.IsEmpty) return "default";
+
+        return Identifiers
+            .Select(kvp => $"{kvp.Key}: {kvp.Value}")
+            .JoinStrings("; ");
+    }
+
+    private string ToDump() => ToString();
+
+    public static Group Default => new Group(ImmutableDictionary<AestheticsId, Factor>.Empty);
 }

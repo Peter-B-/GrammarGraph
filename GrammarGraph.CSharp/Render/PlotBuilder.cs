@@ -10,26 +10,30 @@ public class PlotBuilder
     {
         var combinedLayers = chart.Layers
             .Select(layer =>
-                        layer with {Aesthetics = CombineAesthetics(chart, layer)}
+                        layer with { Aesthetics = CombineAesthetics(chart, layer) }
             )
             .ToImmutableArray();
 
         var chartData = chart.Data as IReadOnlyList<T> ?? chart.Data.ToList();
 
-        var facet = chart.Facet??new SingleFacet<T>();
+        var facet = chart.Facet ?? new SingleFacet<T>();
         var panels = facet.GetPanels(chartData);
 
         var rawLayerData = combinedLayers
-            .Select(layer => GetRawData(layer, chartData, facet, panels))
+            .Select(layer => new
+            {
+                Layer = GetRawData(layer, chartData, facet, panels),
+                LayerDefinition = layer,
+            })
             .ToImmutableArray();
 
         var layerData = rawLayerData
-            .Select(ApplyStatistics)
+            .Select(item => ApplyStatistics(item.Layer, item.LayerDefinition))
             .ToImmutableArray();
 
         var plot = new PlotDescription(
-            layerData.Select(ld => ld.Data)
-                .ToImmutableArray()
+            panels,
+            layerData
         );
         return plot;
     }
@@ -45,9 +49,9 @@ public class PlotBuilder
             {
                 Func<T, double> extract = objectType switch
                 {
-                    _ when objectType == typeof(double) => d => (double) accessor(d),
-                    _ when objectType == typeof(float) => d => (float) accessor(d),
-                    _ when objectType == typeof(int) => d => (int) accessor(d)
+                    _ when objectType == typeof(double) => d => (double)accessor(d),
+                    _ when objectType == typeof(float) => d => (float)accessor(d),
+                    _ when objectType == typeof(int) => d => (int)accessor(d)
                 };
 
                 var values = data
@@ -59,7 +63,7 @@ public class PlotBuilder
         if (objectType == typeof(string))
         {
             var values = data
-                .Select(d => (string) accessor(d));
+                .Select(d => (string)accessor(d));
             return FactorColumn.FromStrings(values);
         }
 
@@ -72,10 +76,10 @@ public class PlotBuilder
     }
 
 
-    private LayerData<T> ApplyStatistics<T>(LayerData<T> layerData)
+    private Layer ApplyStatistics<T>(Layer layer, Layer<T> layerDefinition)
     {
-        var dataFrame = layerData.Layer.Stat.Compute(layerData.Data);
-        return layerData with {Data = dataFrame};
+        var dataFrame = layerDefinition.Stat.Compute(layer.Data);
+        return layer with { Data = dataFrame };
     }
 
     private ImmutableDictionary<AestheticsId, Mapping<T>> CombineAesthetics<T>(GgChart<T> chart, Layer<T> layer) =>
@@ -83,7 +87,10 @@ public class PlotBuilder
             .SetItems(layer.Aesthetics);
 
 
-    private static LayerData<T> GetRawData<T>(Layer<T> layer, IReadOnlyList<T> data, Facet<T> facet, ImmutableArray<Panel> panels)
+    private static Layer GetRawData<T>(
+        Layer<T> layer, IReadOnlyList<T> data,
+        Facet<T> facet, ImmutableArray<Panel> panels
+    )
     {
         var columns =
             layer.Aesthetics
@@ -98,7 +105,13 @@ public class PlotBuilder
 
         var panelMap = facet.AssignToPanels(data, panels);
 
-        return new LayerData<T>(layer, new DataFrame(columns));
+        var group = Group.Default;
+        var groups = ImmutableArray.Create(group);
+
+        var groupMap = panelMap.Select(_ => group)
+            .ToImmutableArray();
+
+        return new Layer(groups, new DataFrame(columns, panelMap, groupMap));
     }
 }
 
