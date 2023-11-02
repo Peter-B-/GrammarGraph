@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GrammarGraph.Data", "GrammarGraph.Data\GrammarGraph.Data.fsproj", "{A3876509-9AFF-4193-9348-479BEADA000A}"
-EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GrammarGraph.Console", "GrammarGraph.Console\GrammarGraph.Console.fsproj", "{E31238D9-3F6D-450B-B80B-24DD97BA18E5}"
-EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GrammarGraph", "GrammarGraph\GrammarGraph.fsproj", "{7DCD0D77-3C0C-45B7-AE28-404529ADDF30}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrammarGraph.CSharp", "GrammarGraph.CSharp\GrammarGraph.CSharp.csproj", "{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrammarGraph.CSharp.Data", "GrammarGraph.CSharp.Data\GrammarGraph.CSharp.Data.csproj", "{D9856D15-CD39-468E-BADB-538C1F0A0439}"
@@ -26,18 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A3876509-9AFF-4193-9348-479BEADA000A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3876509-9AFF-4193-9348-479BEADA000A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3876509-9AFF-4193-9348-479BEADA000A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3876509-9AFF-4193-9348-479BEADA000A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E31238D9-3F6D-450B-B80B-24DD97BA18E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E31238D9-3F6D-450B-B80B-24DD97BA18E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E31238D9-3F6D-450B-B80B-24DD97BA18E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E31238D9-3F6D-450B-B80B-24DD97BA18E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DCD0D77-3C0C-45B7-AE28-404529ADDF30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DCD0D77-3C0C-45B7-AE28-404529ADDF30}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DCD0D77-3C0C-45B7-AE28-404529ADDF30}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DCD0D77-3C0C-45B7-AE28-404529ADDF30}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A9DBDBB-4F19-47DA-8EE7-205282C4F9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
