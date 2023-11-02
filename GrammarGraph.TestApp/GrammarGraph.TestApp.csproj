@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GrammarGraph.CSharp.Data\GrammarGraph.CSharp.Data.csproj" />
-    <ProjectReference Include="..\GrammarGraph.CSharp\GrammarGraph.CSharp.csproj" />
+    <ProjectReference Include="..\GrammarGraph.Data\GrammarGraph.Data.csproj" />
+    <ProjectReference Include="..\GrammarGraph\GrammarGraph.csproj" />
   </ItemGroup>
 
 </Project>

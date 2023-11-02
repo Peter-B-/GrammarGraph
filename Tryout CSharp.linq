@@ -1,14 +1,14 @@
 <Query Kind="Expression">
-  <Reference Relative="GrammarGraph.CSharp\bin\Debug\net8.0\GrammarGraph.CSharp.Data.dll">D:\Projekte\GrammarGraph\GrammarGraph.CSharp\bin\Debug\net8.0\GrammarGraph.CSharp.Data.dll</Reference>
-  <Reference Relative="GrammarGraph.CSharp\bin\Debug\net8.0\GrammarGraph.CSharp.dll">D:\Projekte\GrammarGraph\GrammarGraph.CSharp\bin\Debug\net8.0\GrammarGraph.CSharp.dll</Reference>
-  <Namespace>GrammarGraph.CSharp.Data</Namespace>
+  <Reference Relative="GrammarGraph.Data\bin\Debug\net8.0\GrammarGraph.Data.dll">D:\Projekte\GrammarGraph\GrammarGraph.Data\bin\Debug\net8.0\GrammarGraph.Data.dll</Reference>
+  <Reference Relative="GrammarGraph\bin\Debug\net8.0\GrammarGraph.dll">D:\Projekte\GrammarGraph\GrammarGraph\bin\Debug\net8.0\GrammarGraph.dll</Reference>
   <Namespace>GrammarGraph.CSharp</Namespace>
+  <Namespace>GrammarGraph.CSharp.Data</Namespace>
   <Namespace>GrammarGraph.CSharp.Geometry</Namespace>
   <RuntimeVersion>8.0</RuntimeVersion>
 </Query>
 
 DataSets.GetDiamonds()
-	.Take(5)
+	.Take(10)
 	.CreateChart()
 	.SetAesthetics(AestheticsId.X, d => d.Carat)
 	.SetAesthetics(AestheticsId.Y, d => d.Price)
