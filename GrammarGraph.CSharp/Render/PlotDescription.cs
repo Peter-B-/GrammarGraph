@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using GrammarGraph.CSharp.Extensions;
 using GrammarGraph.CSharp.Internal;
 
 namespace GrammarGraph.CSharp.Render;
@@ -41,6 +42,11 @@ public record Factor(
 
     public override string ToString()
     {
-        return $"{Value} factor of {Levels.Length} levels";
+        var factors = Levels
+            .Take(6)
+            .JoinStrings(", ");
+        if (Levels.Length > 6)
+            factors += ", ...";
+        return $"{Value} / [{factors}]";
     }
 }

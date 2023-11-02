@@ -14,10 +14,8 @@ public record AestheticsId(string Id)
         return new AestheticsId(id);
     }
 
-    private string ToDump()
-    {
-        return Id;
-    }
+    public override string ToString() => Id;
+    private string ToDump() => Id;
 
 
     internal static class Known

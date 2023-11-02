@@ -46,18 +46,44 @@ public class DataFrameItem(DataFrame dataFrame, int index)
     public Group Group => dataFrame.Groups[Index];
 }
 
-public record Group(ImmutableDictionary<AestheticsId, Factor> Identifiers)
+public record AestheticsFactor(AestheticsId Aesthetics, Factor Factor)
+{
+    public override string ToString() => $"{Aesthetics}: {Factor}";
+
+    private string ToDump() => this.ToString();
+}
+
+public record AestheticsFactorColumn(AestheticsId Aesthetics, FactorColumn FactorColumn)
+{
+    public override string ToString() => $"{Aesthetics}: {FactorColumn}";
+
+    private string ToDump() => this.ToString();
+}
+
+public record Group(ImmutableArray<AestheticsFactor> Identifiers)
 {
     public override string ToString()
     {
         if (Identifiers.IsEmpty) return "default";
 
         return Identifiers
-            .Select(kvp => $"{kvp.Key}: {kvp.Value}")
+            .Select(kvp => $"{kvp.Aesthetics}: {kvp.Factor.Value}")
             .JoinStrings("; ");
     }
 
     private string ToDump() => ToString();
 
-    public static Group Default => new Group(ImmutableDictionary<AestheticsId, Factor>.Empty);
+    public static Group Default => new(ImmutableArray<AestheticsFactor>.Empty);
+
+    public bool MatchesIndices(int[] indices)
+    {
+        if (indices.Length != Identifiers.Length)
+            throw new ArgumentException($"{nameof(indices)} must be of same length as {nameof(Identifiers)}.", nameof(indices));
+
+        for (var idx = 0; idx < Identifiers.Length; idx++)
+            if (indices[idx] != Identifiers[idx].Factor.Index)
+                return false;
+
+        return true;
+    }
 }

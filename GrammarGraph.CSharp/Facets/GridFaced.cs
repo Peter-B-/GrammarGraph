@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using GrammarGraph.CSharp.Exceptions;
+using GrammarGraph.CSharp.Extensions;
 using GrammarGraph.CSharp.Internal;
 using GrammarGraph.CSharp.Render;
 
@@ -51,28 +52,17 @@ public record GridFaced<T>(Mapping<T> RowMap, Mapping<T> ColumnMap) : Facet<T>
 
 public record SingleFacet<T> : Facet<T>
 {
-    public override ImmutableArray<Panel> AssignToPanels(IReadOnlyList<T> data, ImmutableArray<Panel> panels)
-    {
-        var panel = panels.Single();
+    public override ImmutableArray<Panel> AssignToPanels(IReadOnlyList<T> data, ImmutableArray<Panel> panels) =>
+        ImmutableArrayFactory.Repeat(panels.Single(), data.Count);
 
-        var builder = ImmutableArray.CreateBuilder<Panel>(data.Count);
-        for (var i = 0; i < data.Count; i++)
-            builder.AddRange(panel);
-        return builder.DrainToImmutable();
-    }
-
-    public override ImmutableArray<Panel> GetPanels(IReadOnlyList<T> data)
-    {
-        var panel = new SinglePanel();
-        return ImmutableArray.Create((Panel) panel);
-    }
+    public override ImmutableArray<Panel> GetPanels(IReadOnlyList<T> data) =>
+        ImmutableArray.Create((Panel) new SinglePanel());
 }
-
 
 public static class GridPanelExtensions
 {
     /// <summary>
-    /// Create a 2D jagged array of GridPabel[rowIdx][colIdx].
+    ///     Create a 2D jagged array of GridPabel[rowIdx][colIdx].
     /// </summary>
     public static ImmutableArray<ImmutableArray<GridPanel>> ToGrid(this IReadOnlyList<GridPanel> panels)
     {
@@ -103,6 +93,7 @@ public static class GridPanelExtensions
                 colBuilder.Add(panel);
                 col++;
             }
+
             rowBuilder.Add(colBuilder.DrainToImmutable());
             row++;
         }
