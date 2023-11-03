@@ -1,6 +1,6 @@
-using GrammarGraph.CSharp.Internal;
+using GrammarGraph.Internal;
 
-namespace GrammarGraph.CSharp.Exceptions;
+namespace GrammarGraph.Exceptions;
 
 public class UnexpectedDataColumnTypeException : Exception
 {

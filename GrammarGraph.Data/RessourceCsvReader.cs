@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace GrammarGraph.CSharp.Data;
+namespace GrammarGraph.Data;
 
 internal static class ResourceCsvReader
 {

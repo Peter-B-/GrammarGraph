@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Exceptions;
-using GrammarGraph.CSharp.Extensions;
-using GrammarGraph.CSharp.Internal;
-using GrammarGraph.CSharp.Render;
+using GrammarGraph.Exceptions;
+using GrammarGraph.Extensions;
+using GrammarGraph.Internal;
+using GrammarGraph.Render;
 
-namespace GrammarGraph.CSharp.Facets;
+namespace GrammarGraph.Facets;
 
 public record GridFaced<T>(Mapping<T> RowMap, Mapping<T> ColumnMap) : Facet<T>
 {

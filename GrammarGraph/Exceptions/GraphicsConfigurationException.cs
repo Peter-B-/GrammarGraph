@@ -1,4 +1,4 @@
-namespace GrammarGraph.CSharp.Exceptions;
+namespace GrammarGraph.Exceptions;
 
 public class GraphicsConfigurationException : Exception
 {

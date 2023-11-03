@@ -1,4 +1,4 @@
-﻿namespace GrammarGraph.CSharp;
+﻿namespace GrammarGraph.Geometry;
 
 public enum LineType
 {

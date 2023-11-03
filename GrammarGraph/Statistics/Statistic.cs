@@ -1,6 +1,6 @@
-using GrammarGraph.CSharp.Internal;
+using GrammarGraph.Internal;
 
-namespace GrammarGraph.CSharp.Statistics;
+namespace GrammarGraph.Statistics;
 
 public abstract record Statistic
 {

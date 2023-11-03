@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace GrammarGraph.CSharp.Internal;
+namespace GrammarGraph.Internal;
 
 public abstract record DataColumn
 {

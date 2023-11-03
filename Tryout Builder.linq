@@ -1,10 +1,10 @@
 <Query Kind="Statements">
   <Reference Relative="GrammarGraph.Data\bin\Debug\net8.0\GrammarGraph.Data.dll">D:\Projekte\GrammarGraph\GrammarGraph.Data\bin\Debug\net8.0\GrammarGraph.Data.dll</Reference>
   <Reference Relative="GrammarGraph\bin\Debug\net8.0\GrammarGraph.dll">D:\Projekte\GrammarGraph\GrammarGraph\bin\Debug\net8.0\GrammarGraph.dll</Reference>
-  <Namespace>GrammarGraph.CSharp</Namespace>
-  <Namespace>GrammarGraph.CSharp.Data</Namespace>
-  <Namespace>GrammarGraph.CSharp.Geometry</Namespace>
-  <Namespace>GrammarGraph.CSharp.Render</Namespace>
+  <Namespace>GrammarGraph</Namespace>
+  <Namespace>GrammarGraph.Data</Namespace>
+  <Namespace>GrammarGraph.Geometry</Namespace>
+  <Namespace>GrammarGraph.Render</Namespace>
   <RuntimeVersion>8.0</RuntimeVersion>
 </Query>
 

@@ -1,4 +1,4 @@
-namespace GrammarGraph.CSharp.Data.Mpg;
+namespace GrammarGraph.Data.Mpg;
 
 /// <summary>
 ///     An item from the fuel economy dataset shipped with ggplot.

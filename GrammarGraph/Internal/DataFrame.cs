@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Exceptions;
-using GrammarGraph.CSharp.Extensions;
-using GrammarGraph.CSharp.Render;
+using GrammarGraph.Exceptions;
+using GrammarGraph.Extensions;
+using GrammarGraph.Render;
 using JetBrains.Annotations;
 
-namespace GrammarGraph.CSharp.Internal;
+namespace GrammarGraph.Internal;
 
 public record DataFrame(
     ImmutableDictionary<AestheticsId, DataColumn> Columns,

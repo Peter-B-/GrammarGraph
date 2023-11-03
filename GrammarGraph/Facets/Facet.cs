@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Render;
+using GrammarGraph.Render;
 
-namespace GrammarGraph.CSharp.Facets;
+namespace GrammarGraph.Facets;
 
 public abstract record Facet<T>
 {

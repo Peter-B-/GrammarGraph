@@ -1,4 +1,4 @@
-﻿namespace GrammarGraph.CSharp;
+﻿namespace GrammarGraph;
 
 public class Theme
 {

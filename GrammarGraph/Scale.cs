@@ -1,3 +1,3 @@
-﻿namespace GrammarGraph.CSharp;
+﻿namespace GrammarGraph;
 
 public record Scale;

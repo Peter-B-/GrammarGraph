@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace GrammarGraph.CSharp.Data.Diamonds;
+namespace GrammarGraph.Data.Diamonds;
 
 internal static class DiamondParser
 {

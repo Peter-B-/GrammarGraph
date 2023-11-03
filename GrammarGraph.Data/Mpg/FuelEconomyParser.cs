@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace GrammarGraph.CSharp.Data.Mpg;
+namespace GrammarGraph.Data.Mpg;
 
 public static class FuelEconomyParser
 {

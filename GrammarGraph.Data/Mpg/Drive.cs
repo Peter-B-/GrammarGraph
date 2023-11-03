@@ -1,4 +1,4 @@
-﻿namespace GrammarGraph.CSharp.Data.Mpg;
+﻿namespace GrammarGraph.Data.Mpg;
 
 public enum Drive
 {

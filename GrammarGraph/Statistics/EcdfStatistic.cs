@@ -1,8 +1,8 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Exceptions;
-using GrammarGraph.CSharp.Internal;
+using GrammarGraph.Exceptions;
+using GrammarGraph.Internal;
 
-namespace GrammarGraph.CSharp.Statistics;
+namespace GrammarGraph.Statistics;
 
 public record EcdfStatistic : Statistic
 {

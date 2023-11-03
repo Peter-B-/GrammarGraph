@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Statistics;
+using GrammarGraph.Statistics;
 
-namespace GrammarGraph.CSharp.Geometry;
+namespace GrammarGraph.Geometry;
 
 public class GeometryBuilder<T>
 {

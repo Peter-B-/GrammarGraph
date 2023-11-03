@@ -1,4 +1,4 @@
-namespace GrammarGraph.CSharp.Extensions;
+namespace GrammarGraph.Extensions;
 
 public static class StringExtensions
 {

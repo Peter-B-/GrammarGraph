@@ -1,4 +1,4 @@
-namespace GrammarGraph.CSharp.Data.Diamonds;
+namespace GrammarGraph.Data.Diamonds;
 
 /// <summary>
 ///     An item from the diamonds data set shipped with ggplot.

@@ -1,6 +1,6 @@
-﻿using GrammarGraph.CSharp.Statistics;
+﻿using GrammarGraph.Statistics;
 
-namespace GrammarGraph.CSharp;
+namespace GrammarGraph;
 
 public static class Stat
 {

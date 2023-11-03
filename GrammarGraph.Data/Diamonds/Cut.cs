@@ -1,4 +1,4 @@
-﻿namespace GrammarGraph.CSharp.Data.Diamonds;
+﻿namespace GrammarGraph.Data.Diamonds;
 
 public enum Cut
 {

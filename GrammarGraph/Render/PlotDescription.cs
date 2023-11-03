@@ -1,8 +1,8 @@
 using System.Collections.Immutable;
-using GrammarGraph.CSharp.Extensions;
-using GrammarGraph.CSharp.Internal;
+using GrammarGraph.Extensions;
+using GrammarGraph.Internal;
 
-namespace GrammarGraph.CSharp.Render;
+namespace GrammarGraph.Render;
 
 public record PlotDescription(
     ImmutableArray<Panel> Panels,

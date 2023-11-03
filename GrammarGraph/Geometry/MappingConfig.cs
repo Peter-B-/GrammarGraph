@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace GrammarGraph.CSharp.Geometry;
+namespace GrammarGraph.Geometry;
 
 public static class MappingConfig
 {

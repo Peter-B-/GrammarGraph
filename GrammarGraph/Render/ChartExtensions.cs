@@ -1,6 +1,6 @@
 using Plotly.NET;
 
-namespace GrammarGraph.CSharp.Render;
+namespace GrammarGraph.Render;
 
 public static class ChartExtensions
 {

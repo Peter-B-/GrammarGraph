@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 using System.Linq.Expressions;
-using GrammarGraph.CSharp.Internal;
+using GrammarGraph.Internal;
 using Microsoft.FSharp.Core;
 using Plotly.NET;
 
-namespace GrammarGraph.CSharp.Render;
+namespace GrammarGraph.Render;
 
 public class PlotlyRenderEngine
 {

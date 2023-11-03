@@ -1,6 +1,6 @@
-using GrammarGraph.CSharp.Internal;
+using GrammarGraph.Internal;
 
-namespace GrammarGraph.CSharp.Render;
+namespace GrammarGraph.Render;
 
 public record LayerData<T>(
     Layer<T> Layer,

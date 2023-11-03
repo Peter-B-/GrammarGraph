@@ -1,4 +1,4 @@
-﻿namespace GrammarGraph.CSharp.Data;
+﻿namespace GrammarGraph.Data;
 
 public class ResourceNotFoundException : Exception
 {

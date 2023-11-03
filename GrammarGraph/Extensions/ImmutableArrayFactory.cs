@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace GrammarGraph.CSharp.Extensions;
+namespace GrammarGraph.Extensions;
 
 public static class ImmutableArrayFactory
 {

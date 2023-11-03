@@ -1,3 +1,3 @@
-﻿namespace GrammarGraph.CSharp.Geometry;
+﻿namespace GrammarGraph.Geometry;
 
 public record PointGeometry<T> : Geometry<T>;

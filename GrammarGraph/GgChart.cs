@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 using System.Linq.Expressions;
-using GrammarGraph.CSharp.Facets;
-using GrammarGraph.CSharp.Geometry;
-using GrammarGraph.CSharp.Render;
+using GrammarGraph.Facets;
+using GrammarGraph.Geometry;
+using GrammarGraph.Render;
 
-namespace GrammarGraph.CSharp;
+namespace GrammarGraph;
 
 public record GgChart<T>(
     IEnumerable<T> Data,

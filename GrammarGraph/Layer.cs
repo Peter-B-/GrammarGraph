@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
-using GrammarGraph.CSharp.Geometry;
-using GrammarGraph.CSharp.Statistics;
+using GrammarGraph.Geometry;
+using GrammarGraph.Statistics;
 
-namespace GrammarGraph.CSharp;
+namespace GrammarGraph;
 
 public record Layer<T>(
     Geometry<T> Geometry,

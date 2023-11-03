@@ -1,7 +1,7 @@
-using GrammarGraph.CSharp.Data.Diamonds;
-using GrammarGraph.CSharp.Data.Mpg;
+using GrammarGraph.Data.Diamonds;
+using GrammarGraph.Data.Mpg;
 
-namespace GrammarGraph.CSharp.Data;
+namespace GrammarGraph.Data;
 
 public static class DataSets
 {

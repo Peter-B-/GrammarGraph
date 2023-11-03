@@ -1,10 +1,9 @@
 using System.Collections.Immutable;
-using System.Linq.Expressions;
-using GrammarGraph.CSharp.Exceptions;
-using GrammarGraph.CSharp.Internal;
-using GrammarGraph.CSharp.Render;
+using GrammarGraph.Exceptions;
+using GrammarGraph.Internal;
+using GrammarGraph.Render;
 
-namespace GrammarGraph.CSharp.Facets;
+namespace GrammarGraph.Facets;
 
 public record WrapFaced<T>(Mapping<T> Map) : Facet<T>
 {

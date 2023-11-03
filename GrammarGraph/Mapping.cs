@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace GrammarGraph.CSharp;
+namespace GrammarGraph;
 
 public record Mapping<T>(
     Expression<Func<T, object>> Expression,

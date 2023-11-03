@@ -1,7 +1,7 @@
-using GrammarGraph.CSharp;
-using GrammarGraph.CSharp.Data;
-using GrammarGraph.CSharp.Geometry;
-using GrammarGraph.CSharp.Render;
+using GrammarGraph;
+using GrammarGraph.Data;
+using GrammarGraph.Geometry;
+using GrammarGraph.Render;
 
 var chart =
         DataSets.GetDiamonds()
