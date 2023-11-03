@@ -7,7 +7,7 @@ namespace GrammarGraph.Facets;
 
 public record WrapFaced<T>(Mapping<T> Map) : Facet<T>
 {
-    public override ImmutableArray<Panel> GetPanels(IReadOnlyList<T> data)
+    public override PanelCollection GetPanels(IReadOnlyList<T> data)
     {
         var column = GetFactorColumn(data);
 
@@ -17,10 +17,15 @@ public record WrapFaced<T>(Mapping<T> Map) : Facet<T>
             column.Levels.Select(
                     (level, idx) => new WrapPanel(level, idx / noOfColumns, idx % noOfColumns)
                 )
-                .Cast<Panel>()
                 .ToImmutableArray();
 
-        return panels;
+        return new PanelCollection(
+            panels.Max(p => p.RowIdx) + 1,
+            panels.Max(p => p.ColIdx) + 1,
+            ImmutableArray<Panel>.CastUp(panels)
+        );
+
+
     }
 
     private FactorColumn GetFactorColumn(IReadOnlyList<T> data)

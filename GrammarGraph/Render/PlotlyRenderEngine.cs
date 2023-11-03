@@ -11,8 +11,9 @@ public class PlotlyRenderEngine
 {
     private static readonly ImmutableArray<Color> Colors =
         ImmutableArray.Create(Color.fromRGB(166, 206, 227), Color.fromRGB(31, 120, 180), Color.fromRGB(178, 223, 138), Color.fromRGB(51, 160, 44),
-            Color.fromRGB(251, 154, 153), Color.fromRGB(227, 26, 28), Color.fromRGB(253, 191, 111), Color.fromRGB(255, 127, 0), Color.fromRGB(202, 178, 214), Color.fromRGB(106, 61, 154),
-            Color.fromRGB(255, 255, 153), Color.fromRGB(177, 89, 40));
+                              Color.fromRGB(251, 154, 153), Color.fromRGB(227, 26, 28), Color.fromRGB(253, 191, 111), Color.fromRGB(255, 127, 0), Color.fromRGB(202, 178, 214),
+                              Color.fromRGB(106, 61, 154),
+                              Color.fromRGB(255, 255, 153), Color.fromRGB(177, 89, 40));
 
     public static Type GetObjectType<T>(Expression<Func<T, object>> expr)
     {
@@ -25,61 +26,53 @@ public class PlotlyRenderEngine
 
     public GenericChart.GenericChart Render(PlotDescription plot)
     {
+        var layer = plot.Layers.First();
+
+        var grouped = layer.Data.Group();
+
+        var panelCharts =
+            grouped.GroupBy(g => g.Panel)
+                .Select(gr => new
+                {
+                    Panel = gr.Key,
+                    Traces = RenderGroups(gr, layer.Geometry)
+                })
+                .ToList();
 
 
-
-        var firstLayer = plot.Layers.First();
-
-        var data = firstLayer.Data;
-
-
-        var xType = data[AestheticsId.X].Type;
-        var yType = data[AestheticsId.Y].Type;
-
-        var color = data.TryGetColumn(AestheticsId.Color) switch
-        {
-            null => FSharpOption<Color>.None,
-            DoubleColumn doubleColumn => FSharpOption<Color>.None,
-            FactorColumn factorColumn => MapToColor(factorColumn)
-        };
-
-        var resultChart = (xType, yType) switch
-        {
-            (DataColumnType.Double, DataColumnType.Double) =>
-                Chart2D.Chart.Point<double, double, string>(
-                    data.GetDoubleColumn(AestheticsId.X).Values,
-                    data.GetDoubleColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
-            (DataColumnType.Factor, DataColumnType.Double) =>
-                Chart2D.Chart.Point<string, double, string>(
-                    data.GetFactorColumn(AestheticsId.X).Values,
-                    data.GetDoubleColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
-            (DataColumnType.Double, DataColumnType.Factor) =>
-                Chart2D.Chart.Point<double, string, string>(
-                    data.GetDoubleColumn(AestheticsId.X).Values,
-                    data.GetFactorColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
-                ),
-            (DataColumnType.Factor, DataColumnType.Factor) =>
-                Chart2D.Chart.Point<string, string, string>(
-                    data.GetFactorColumn(AestheticsId.X).Values,
-                    data.GetFactorColumn(AestheticsId.Y).Values,
-                    MarkerColor: color
+        return
+            Chart.Grid<IEnumerable<GenericChart.GenericChart>>(
+                    plot.Panels.Rows,
+                    plot.Panels.Columns,
+                    Pattern: FSharpOption<StyleParam.LayoutGridPattern>.Some(StyleParam.LayoutGridPattern.Coupled)
                 )
-        };
+                .Invoke(panelCharts.Select(c => c.Traces));
+    }
 
+    private GenericChart.GenericChart CreateChart(PanelGroupData data, IGeometryLogic geometry)
+    {
+        var resultChart = geometry.CreateChart(data);
+
+        var traceName = data.Group.Identifiers
+            .Select(id => id.Factor.Value)
+            .JoinStrings(", ")
+            ;
+        var showLegend = data.Group.Identifiers.Any();
+
+        resultChart.WithTraceInfo(FSharpOption<string>.Some(traceName),
+                                  ShowLegend:FSharpOption<bool>.Some(showLegend)
+                                  );
         return resultChart;
     }
+
+  
 
     private FSharpOption<Color> MapToColor(FactorColumn factor)
     {
         var colorMap =
             factor.Values
                 .Distinct()
-                .Select((v, i) => new { Key = v, Color = Colors[i] })
+                .Select((v, i) => new {Key = v, Color = Colors[i]})
                 .ToDictionary(x => x.Key, x => x.Color);
 
         var colors =
@@ -87,5 +80,13 @@ public class PlotlyRenderEngine
                 .Select(v => colorMap[v]);
 
         return FSharpOption<Color>.Some(Color.fromColors(colors));
+    }
+
+    private GenericChart.GenericChart RenderGroups(IEnumerable<PanelGroupData> data, IGeometryLogic geometry)
+    {
+        var groupCharts = data
+            .Select(groupData => CreateChart(groupData, geometry));
+
+        return Chart.Combine(groupCharts);
     }
 }

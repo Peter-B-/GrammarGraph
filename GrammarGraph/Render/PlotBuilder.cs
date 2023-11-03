@@ -24,7 +24,7 @@ public class PlotBuilder
         var rawLayerData = combinedLayers
             .Select(layer => new
             {
-                Layer = ConstructLayers(layer, chartData, facet, panels),
+                Layer = ConstructLayers(layer, chartData, facet, panels.Panels),
                 LayerDefinition = layer,
             })
             .ToImmutableArray();
@@ -32,7 +32,7 @@ public class PlotBuilder
         var layerData = rawLayerData
             .Select(item =>
             {
-                Layer<T> layerDefinition = item.LayerDefinition;
+                var layerDefinition = item.LayerDefinition;
                 return ApplyStatistics(item.Layer, layerDefinition.Stat);
             })
             .ToImmutableArray();

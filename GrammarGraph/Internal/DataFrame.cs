@@ -63,12 +63,6 @@ public record DataFrame(
         return new DataFrame(columns, panelBuilder.MoveToImmutable(), groupBuilder.MoveToImmutable());
     }
 
-    public DataColumn? TryGetColumn(AestheticsId id)
-    {
-        Columns.TryGetValue(id, out var col);
-        return col;
-    }
-
     private ImmutableDictionary<AestheticsId, DataColumn> GetSubset(ImmutableArray<int> indices) =>
         Columns.ToImmutableDictionary(
             kvp => kvp.Key,
@@ -108,6 +102,7 @@ internal record PanelGroupIndices(Panel Panel, Group Group)
 
 public record PanelGroupData(Panel Panel, Group Group, ImmutableDictionary<AestheticsId, DataColumn> Columns) : IDataColumnContainer
 {
+    public DataColumn this[AestheticsId aestheticsId] => Columns[aestheticsId];
 }
 
 [NoReorder]

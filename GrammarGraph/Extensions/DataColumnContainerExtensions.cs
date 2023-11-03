@@ -21,4 +21,10 @@ public static class DataColumnContainerExtensions
         return container.Columns[id] as FactorColumn ??
             throw new UnexpectedDataColumnTypeException(typeof(FactorColumn), container.Columns[id].GetType());
     }
+
+    public static DataColumn? TryGetColumn(this IDataColumnContainer container, AestheticsId id)
+    {
+        container.Columns.TryGetValue(id, out var col);
+        return col;
+    }
 }

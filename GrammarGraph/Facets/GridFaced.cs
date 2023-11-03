@@ -26,7 +26,7 @@ public record GridFaced<T>(Mapping<T> RowMap, Mapping<T> ColumnMap) : Facet<T>
             .ToImmutableArray();
     }
 
-    public override ImmutableArray<Panel> GetPanels(IReadOnlyList<T> data)
+    public override PanelCollection GetPanels(IReadOnlyList<T> data)
     {
         var (rowColumn, colColumn) = GetColumns(data);
 
@@ -37,7 +37,9 @@ public record GridFaced<T>(Mapping<T> RowMap, Mapping<T> ColumnMap) : Facet<T>
                 )
                 .ToImmutableArray();
 
-        return ImmutableArray<Panel>.CastUp(panels);
+        return
+            new PanelCollection(rowColumn.Length, colColumn.Length,
+                                ImmutableArray<Panel>.CastUp(panels));
     }
 
     private (FactorColumn rowColumn, FactorColumn colColumn) GetColumns(IReadOnlyList<T> data)
@@ -55,8 +57,8 @@ public record SingleFacet<T> : Facet<T>
     public override ImmutableArray<Panel> AssignToPanels(IReadOnlyList<T> data, ImmutableArray<Panel> panels) =>
         ImmutableArrayFactory.Repeat(panels.Single(), data.Count);
 
-    public override ImmutableArray<Panel> GetPanels(IReadOnlyList<T> data) =>
-        ImmutableArray.Create((Panel) new SinglePanel());
+    public override PanelCollection GetPanels(IReadOnlyList<T> data) =>
+        new PanelCollection(1, 1, ImmutableArray.Create((Panel) new SinglePanel()));
 }
 
 public static class GridPanelExtensions
