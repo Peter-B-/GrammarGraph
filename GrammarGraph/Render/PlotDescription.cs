@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using GrammarGraph.Extensions;
 using GrammarGraph.Internal;
-using Microsoft.FSharp.Core;
 using Plotly.NET;
 
 namespace GrammarGraph.Render;
@@ -9,7 +8,6 @@ namespace GrammarGraph.Render;
 public record PlotDescription(
     PanelCollection Panels,
     ImmutableArray<Layer> Layers
-
 );
 
 public record Layer(
@@ -23,15 +21,14 @@ public record PanelCollection(
     ImmutableArray<Panel> Panels
 );
 
-public abstract record Panel(
-);
+public abstract record Panel;
 
 public record GridPanel(
     string RowLabel,
     string ColLabel,
     int RowIdx,
     int ColIdx
-):Panel;
+) : Panel;
 
 public record WrapPanel(
     string Label,
@@ -64,7 +61,7 @@ public interface IGeometryLogic
     GenericChart.GenericChart CreateChart(PanelGroupData data);
 }
 
-public class LineGeometryLogic:IGeometryLogic
+public class LineGeometryLogic : IGeometryLogic
 {
     public GenericChart.GenericChart CreateChart(PanelGroupData data)
     {
@@ -95,7 +92,6 @@ public class LineGeometryLogic:IGeometryLogic
                 )
         };
         return resultChart;
-
     }
 }
 
@@ -110,27 +106,26 @@ public class PointGeometryLogic : IGeometryLogic
         var resultChart = (xType, yType) switch
         {
             (DataColumnType.Double, DataColumnType.Double) =>
-                Chart2D.Chart.Line<double, double, string>(
+                Chart2D.Chart.Point<double, double, string>(
                     data.GetDoubleColumn(AestheticsId.X).Values,
                     data.GetDoubleColumn(AestheticsId.Y).Values
                 ),
             (DataColumnType.Factor, DataColumnType.Double) =>
-                Chart2D.Chart.Line<string, double, string>(
+                Chart2D.Chart.Point<string, double, string>(
                     data.GetFactorColumn(AestheticsId.X).Values,
                     data.GetDoubleColumn(AestheticsId.Y).Values
                 ),
             (DataColumnType.Double, DataColumnType.Factor) =>
-                Chart2D.Chart.Line<double, string, string>(
+                Chart2D.Chart.Point<double, string, string>(
                     data.GetDoubleColumn(AestheticsId.X).Values,
                     data.GetFactorColumn(AestheticsId.Y).Values
                 ),
             (DataColumnType.Factor, DataColumnType.Factor) =>
-                Chart2D.Chart.Line<string, string, string>(
+                Chart2D.Chart.Point<string, string, string>(
                     data.GetFactorColumn(AestheticsId.X).Values,
                     data.GetFactorColumn(AestheticsId.Y).Values
                 )
         };
         return resultChart;
-
     }
 }
