@@ -9,10 +9,16 @@
 </Query>
 
 DataSets.GetDiamonds()
-	.Take(100000)
+	.Take(1000)
+	.OrderBy(d => d.Cut)
+	.ThenBy(d => d.Carat)
 	.CreateChart()
-	.SetAesthetics(AestheticsId.X, d => d.Price)
+	.SetAesthetics(AestheticsId.X, d => d.Carat)
+	.SetAesthetics(AestheticsId.Y, d => d.Price)
 	.SetAesthetics(AestheticsId.Color, d => d.Cut)
-	.Add(b => b.Line(stat: new EcdfStatistic()))
-	.InFacets(d => d.Color)
+	.Add(b => b.Point()
+		.SetAesthetics(AestheticsId.Color, d => d.Color))
+	.Add(b => b.Line())
+	.InFacets(d => d.Cut)
+	
 	

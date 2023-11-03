@@ -26,19 +26,24 @@ public class PlotlyRenderEngine
 
     public GenericChart.GenericChart Render(PlotDescription plot)
     {
-        var layer = plot.Layers.First();
+        var layerCharts =
+        plot.Layers
+            .SelectMany(layer =>
+                        layer.Data.Group()
+                            .GroupBy(g => g.Panel)
+                            .Select(gr => new PanelChart(gr.Key, RenderGroups(gr, layer.Geometry)))
+                            .ToList()
+                        );
 
-        var grouped = layer.Data.Group();
+        var combinedChartDict = layerCharts
+            .GroupBy(lc => lc.Panel)
+            .Select(gr => new PanelChart(gr.Key, Chart.Combine(gr.Select(g => g.Traces))))
+            .ToDictionary(pc => pc.Panel, pc => pc.Traces);
 
-        var panelCharts =
-            grouped.GroupBy(g => g.Panel)
-                .Select(gr => new
-                {
-                    Panel = gr.Key,
-                    Traces = RenderGroups(gr, layer.Geometry)
-                })
-                .ToList();
 
+        var panelCharts = plot.Panels.Panels
+            .Select(p => combinedChartDict.TryGetValue(p, out var traces)?traces:Chart.Invisible())
+            .ToList();
 
         return
             Chart.Grid<IEnumerable<GenericChart.GenericChart>>(
@@ -46,7 +51,7 @@ public class PlotlyRenderEngine
                     plot.Panels.Columns,
                     Pattern: FSharpOption<StyleParam.LayoutGridPattern>.Some(StyleParam.LayoutGridPattern.Coupled)
                 )
-                .Invoke(panelCharts.Select(c => c.Traces));
+                .Invoke(panelCharts);
     }
 
     private GenericChart.GenericChart CreateChart(PanelGroupData data, IGeometryLogic geometry)
@@ -60,19 +65,19 @@ public class PlotlyRenderEngine
         var showLegend = data.Group.Identifiers.Any();
 
         resultChart.WithTraceInfo(FSharpOption<string>.Some(traceName),
-                                  ShowLegend:FSharpOption<bool>.Some(showLegend)
+                                  ShowLegend: FSharpOption<bool>.Some(showLegend)
                                   );
         return resultChart;
     }
 
-  
+
 
     private FSharpOption<Color> MapToColor(FactorColumn factor)
     {
         var colorMap =
             factor.Values
                 .Distinct()
-                .Select((v, i) => new {Key = v, Color = Colors[i]})
+                .Select((v, i) => new { Key = v, Color = Colors[i] })
                 .ToDictionary(x => x.Key, x => x.Color);
 
         var colors =
@@ -90,3 +95,5 @@ public class PlotlyRenderEngine
         return Chart.Combine(groupCharts);
     }
 }
+
+public record PanelChart(Panel Panel, GenericChart.GenericChart Traces);
