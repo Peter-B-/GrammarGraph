@@ -1,12 +1,44 @@
 using System.Collections.Immutable;
 using GrammarGraph.Exceptions;
+using GrammarGraph.Extensions;
 using GrammarGraph.Internal;
 
 namespace GrammarGraph.Statistics;
 
-public record EcdfStatistic : Statistic
+public abstract record PanelGroupStatistic : Statistic
 {
     public override DataFrame Compute(DataFrame data)
+    {
+        var groupedData = data.Group();
+
+        var transformed =
+            groupedData
+                .Select(ComputeOnGrouped)
+                .ToList();
+
+        return DataFrame.Merge(transformed);
+    }
+
+    protected abstract PanelGroupData ComputeOnGrouped(PanelGroupData data);
+}
+
+public record EcdfStatistic : PanelGroupStatistic
+{
+    public static (ImmutableArray<double> values, ImmutableArray<double> cumulativeProbability) ComputeEcdf(ImmutableArray<double> data)
+    {
+        // Todo: Write implementation that removes duplicate values
+
+        var sortedData = data.OrderBy(x => x).ToArray();
+        var ecdf = new double[sortedData.Length];
+        double n = ecdf.Length;
+
+        for (var i = 0; i < ecdf.Length; i++)
+            ecdf[i] = (i + 1) / n;
+
+        return (ImmutableArray.Create(sortedData), ImmutableArray.Create(ecdf));
+    }
+
+    protected override PanelGroupData ComputeOnGrouped(PanelGroupData data)
     {
         var (valueAesthetics, cumProbAesthetics) = (data.Contains(AestheticsId.X), data.Contains(AestheticsId.Y)) switch
         {
@@ -20,29 +52,9 @@ public record EcdfStatistic : Statistic
 
         var (values, cumProb) = ComputeEcdf(input.Values);
 
-        var newColumns = new KeyValuePair<AestheticsId, DataColumn>[]
-        {
-            new(valueAesthetics, new DoubleColumn(values)),
-            new(cumProbAesthetics, new DoubleColumn(cumProb))
-        };
-
-        //var newData = new DataFrame(data.Columns.SetItems(newColumns));
-
-        //return newData;
-        return data;
-    }
-
-    public static (ImmutableArray<double> values, ImmutableArray<double> cumulativeProbability) ComputeEcdf(ImmutableArray<double> data)
-    {
-        // Todo: Write implementation that removes duplicate values
-
-        var sortedData = data.OrderBy(x => x).ToArray();
-        var ecdf = new double[sortedData.Length];
-        double n = ecdf.Length;
-
-        for (var i = 0; i < ecdf.Length; i++)
-            ecdf[i] = (i + 1) / n;
-
-        return (ImmutableArray.Create(sortedData), ImmutableArray.Create(ecdf));
+        var builder = ImmutableDictionary.CreateBuilder<AestheticsId, DataColumn>();
+        builder.Add(valueAesthetics, new DoubleColumn(values));
+        builder.Add(cumProbAesthetics, new DoubleColumn(cumProb));
+        return new PanelGroupData(data.Panel, data.Group, builder.ToImmutable());
     }
 }

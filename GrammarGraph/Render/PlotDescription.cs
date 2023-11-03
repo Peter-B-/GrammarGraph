@@ -11,6 +11,7 @@ public record PlotDescription(
 );
 
 public record Layer(
+    IGeometryLogic Geometry,
     ImmutableArray<Group> Groups,
     DataFrame Data
 );
@@ -49,4 +50,19 @@ public record Factor(
             factors += ", ...";
         return $"{Value} / [{factors}]";
     }
+}
+
+public interface IGeometryLogic
+{
+
+}
+
+public class LineGeometryLogic:IGeometryLogic
+{
+
+}
+
+public class PointGeometryLogic : IGeometryLogic
+{
+
 }

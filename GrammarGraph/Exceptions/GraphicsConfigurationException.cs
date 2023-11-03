@@ -2,10 +2,6 @@ namespace GrammarGraph.Exceptions;
 
 public class GraphicsConfigurationException : Exception
 {
-    public GraphicsConfigurationException()
-    {
-    }
-
     public GraphicsConfigurationException(string? message) : base(message)
     {
     }

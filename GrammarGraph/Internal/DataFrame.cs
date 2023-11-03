@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using GrammarGraph.Exceptions;
 using GrammarGraph.Extensions;
 using GrammarGraph.Render;
 using JetBrains.Annotations;
@@ -9,25 +8,59 @@ namespace GrammarGraph.Internal;
 public record DataFrame(
     ImmutableDictionary<AestheticsId, DataColumn> Columns,
     ImmutableArray<Panel> Panels,
-    ImmutableArray<Group> Groups)
+    ImmutableArray<Group> Groups) : IDataColumnContainer
 {
     public DataColumn this[AestheticsId aestheticsId] => Columns[aestheticsId];
 
-    public bool Contains(AestheticsId id)
+    public IReadOnlyList<PanelGroupData> Group()
     {
-        return Columns.ContainsKey(id);
+        var groupedIndices = new HashSet<PanelGroupIndices>(PanelGroupIndices.PanelGroupComparer);
+        for (var idx = 0; idx < Panels.Length; idx++)
+        {
+            var group = Groups[idx];
+            var panel = Panels[idx];
+
+            var groupedIndex = groupedIndices.GetOrAdd(new PanelGroupIndices(panel, group));
+            groupedIndex.Add(idx);
+        }
+
+        return
+            groupedIndices
+                .Select(gi => new PanelGroupData(
+                            gi.Panel,
+                            gi.Group,
+                            GetSubset(gi.GetIndices())))
+                .ToList();
     }
 
-    public DoubleColumn GetDoubleColumn(AestheticsId id)
+    public static DataFrame Merge(List<PanelGroupData> panelGroups)
     {
-        return Columns[id] as DoubleColumn ??
-            throw new UnexpectedDataColumnTypeException(typeof(DoubleColumn), Columns[id].GetType());
-    }
+        if (panelGroups.Count == 0)
+            return new DataFrame(
+                ImmutableDictionary<AestheticsId, DataColumn>.Empty,
+                ImmutableArray<Panel>.Empty,
+                ImmutableArray<Group>.Empty);
 
-    public FactorColumn GetFactorColumn(AestheticsId id)
-    {
-        return Columns[id] as FactorColumn ??
-            throw new UnexpectedDataColumnTypeException(typeof(FactorColumn), Columns[id].GetType());
+        var itemCount = panelGroups.Sum(pg => pg.Columns.First().Value.Length);
+
+        var panelBuilder = ImmutableArray.CreateBuilder<Panel>(itemCount);
+        var groupBuilder = ImmutableArray.CreateBuilder<Group>(itemCount);
+
+        foreach (var pg in panelGroups)
+            for (var i = 0; i < pg.Columns.First().Value.Length; i++)
+            {
+                panelBuilder.Add(pg.Panel);
+                groupBuilder.Add(pg.Group);
+            }
+
+        var aesthetics = panelGroups.First().Columns.Keys;
+        var columns = aesthetics
+            .ToImmutableDictionary(
+                id => id,
+                id => DataColumnFactory.Merge(panelGroups.Select(pg => pg.Columns[id]))
+            );
+
+        return new DataFrame(columns, panelBuilder.MoveToImmutable(), groupBuilder.MoveToImmutable());
     }
 
     public DataColumn? TryGetColumn(AestheticsId id)
@@ -35,6 +68,46 @@ public record DataFrame(
         Columns.TryGetValue(id, out var col);
         return col;
     }
+
+    private ImmutableDictionary<AestheticsId, DataColumn> GetSubset(ImmutableArray<int> indices) =>
+        Columns.ToImmutableDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.Subset(indices)
+        );
+}
+
+internal record PanelGroupIndices(Panel Panel, Group Group)
+{
+    private readonly ImmutableArray<int>.Builder indices = ImmutableArray.CreateBuilder<int>();
+
+    public static IEqualityComparer<PanelGroupIndices> PanelGroupComparer { get; } = new PanelGroupEqualityComparer();
+
+    public void Add(int idx)
+    {
+        indices.Add(idx);
+    }
+
+    public ImmutableArray<int> GetIndices() => indices.ToImmutableArray();
+
+    private sealed class PanelGroupEqualityComparer : IEqualityComparer<PanelGroupIndices>
+    {
+        public bool Equals(PanelGroupIndices? x, PanelGroupIndices? y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            if (ReferenceEquals(x.Panel, y.Panel) && ReferenceEquals(x.Group, y.Group)) return true;
+            return x.Panel.Equals(y.Panel) && x.Group.Equals(y.Group);
+        }
+
+        public int GetHashCode(PanelGroupIndices obj) =>
+            HashCode.Combine(obj.Panel, obj.Group);
+    }
+}
+
+public record PanelGroupData(Panel Panel, Group Group, ImmutableDictionary<AestheticsId, DataColumn> Columns) : IDataColumnContainer
+{
 }
 
 [NoReorder]
@@ -50,29 +123,18 @@ public record AestheticsFactor(AestheticsId Aesthetics, Factor Factor)
 {
     public override string ToString() => $"{Aesthetics}: {Factor}";
 
-    private string ToDump() => this.ToString();
+    private string ToDump() => ToString();
 }
 
 public record AestheticsFactorColumn(AestheticsId Aesthetics, FactorColumn FactorColumn)
 {
     public override string ToString() => $"{Aesthetics}: {FactorColumn}";
 
-    private string ToDump() => this.ToString();
+    private string ToDump() => ToString();
 }
 
 public record Group(ImmutableArray<AestheticsFactor> Identifiers)
 {
-    public override string ToString()
-    {
-        if (Identifiers.IsEmpty) return "default";
-
-        return Identifiers
-            .Select(kvp => $"{kvp.Aesthetics}: {kvp.Factor.Value}")
-            .JoinStrings("; ");
-    }
-
-    private string ToDump() => ToString();
-
     public static Group Default => new(ImmutableArray<AestheticsFactor>.Empty);
 
     public bool MatchesIndices(int[] indices)
@@ -86,4 +148,20 @@ public record Group(ImmutableArray<AestheticsFactor> Identifiers)
 
         return true;
     }
+
+    public override string ToString()
+    {
+        if (Identifiers.IsEmpty) return "default";
+
+        return Identifiers
+            .Select(kvp => $"{kvp.Aesthetics}: {kvp.Factor.Value}")
+            .JoinStrings("; ");
+    }
+
+    private string ToDump() => ToString();
+}
+
+public interface IDataColumnContainer
+{
+    ImmutableDictionary<AestheticsId, DataColumn> Columns { get; }
 }

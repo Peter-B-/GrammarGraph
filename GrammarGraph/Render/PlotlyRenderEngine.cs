@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Linq.Expressions;
+using GrammarGraph.Extensions;
 using GrammarGraph.Internal;
 using Microsoft.FSharp.Core;
 using Plotly.NET;
@@ -24,6 +25,9 @@ public class PlotlyRenderEngine
 
     public GenericChart.GenericChart Render(PlotDescription plot)
     {
+
+
+
         var firstLayer = plot.Layers.First();
 
         var data = firstLayer.Data;

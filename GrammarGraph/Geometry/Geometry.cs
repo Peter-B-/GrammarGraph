@@ -1,3 +1,8 @@
-﻿namespace GrammarGraph.Geometry;
+using GrammarGraph.Render;
 
-public abstract record Geometry<T>;
+namespace GrammarGraph.Geometry;
+
+public abstract record Geometry<T>
+{
+    public abstract IGeometryLogic ConstructLogic();
+}

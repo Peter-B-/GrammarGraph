@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using GrammarGraph.Extensions;
 using GrammarGraph.Facets;
 using GrammarGraph.Internal;
+using GrammarGraph.Statistics;
 
 namespace GrammarGraph.Render;
 
@@ -29,7 +30,11 @@ public class PlotBuilder
             .ToImmutableArray();
 
         var layerData = rawLayerData
-            .Select(item => ApplyStatistics(item.Layer, item.LayerDefinition))
+            .Select(item =>
+            {
+                Layer<T> layerDefinition = item.LayerDefinition;
+                return ApplyStatistics(item.Layer, layerDefinition.Stat);
+            })
             .ToImmutableArray();
 
         var plot = new PlotDescription(
@@ -77,9 +82,9 @@ public class PlotBuilder
     }
 
 
-    private Layer ApplyStatistics<T>(Layer layer, Layer<T> layerDefinition)
+    private Layer ApplyStatistics(Layer layer, Statistic statistic)
     {
-        var dataFrame = layerDefinition.Stat.Compute(layer.Data);
+        var dataFrame = statistic.Compute(layer.Data);
         return layer with {Data = dataFrame};
     }
 
@@ -120,7 +125,9 @@ public class PlotBuilder
         var nonCategoricalColumns = columns
             .RemoveRange(factorAesthetics.Select(fcc => fcc.Aesthetics));
 
-        return new Layer(groups, new DataFrame(nonCategoricalColumns, panelMap, groupMap));
+
+        var geometryLogic = layer.Geometry.ConstructLogic();
+        return new Layer(geometryLogic, groups, new DataFrame(nonCategoricalColumns, panelMap, groupMap));
     }
 
     private static ImmutableArray<Group> CreateGroups(IReadOnlyList<AestheticsFactorColumn> factorColumns)
